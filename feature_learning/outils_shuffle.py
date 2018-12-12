@@ -257,15 +257,33 @@ def TrainPair(nbPairTotal, searchDir, imgList, topkImg, topkScale, topkW, topkH,
 
 
 ## Process training pairs, sampleIndex dimension: iterEpoch * batchSize
-def DataShuffle(sample, batchSize) :
+def DataShuffle(sample, batchSize, trainRegion, shuffle, topkImg, topkScale, topkW, topkH) :
 
 	nbSample = len(sample)
-	iterEpoch = nbSample / batchSize
+	patch1Info = np.zeros((nbSample * 4, 4), dtype = np.int64)
+	patch2Info = np.zeros((nbSample * 4, 4), dtype = np.int64)
+	for i in range(nbSample) : 
+		pair = sample[i]
+		queryIndex = int(pair[0])
+		pairIndex = [int(pair[1]), int(pair[2])]
+
+		patch1Info[i * 4] = np.array([topkImg[queryIndex, pairIndex[0]], topkScale[queryIndex, pairIndex[0]], topkW[queryIndex, pairIndex[0]] - trainRegion / 2 + 1, topkH[queryIndex, pairIndex[0]] - trainRegion / 2 + 1])
+		patch1Info[i * 4 + 1] = np.array([topkImg[queryIndex, pairIndex[0]], topkScale[queryIndex, pairIndex[0]], topkW[queryIndex, pairIndex[0]] - trainRegion / 2 + 1, topkH[queryIndex, pairIndex[0]] + trainRegion / 2])
+		patch1Info[i * 4 + 2] = np.array([topkImg[queryIndex, pairIndex[0]], topkScale[queryIndex, pairIndex[0]], topkW[queryIndex, pairIndex[0]] + trainRegion / 2, topkH[queryIndex, pairIndex[0]] - trainRegion / 2 + 1])
+		patch1Info[i * 4 + 3] = np.array([topkImg[queryIndex, pairIndex[0]], topkScale[queryIndex, pairIndex[0]], topkW[queryIndex, pairIndex[0]] + trainRegion / 2, topkH[queryIndex, pairIndex[0]] + trainRegion / 2])
+		
+		patch2Info[i * 4] = np.array([topkImg[queryIndex, pairIndex[1]], topkScale[queryIndex, pairIndex[1]], topkW[queryIndex, pairIndex[1]] - trainRegion / 2 + 1 , topkH[queryIndex, pairIndex[1]] - trainRegion / 2 + 1])
+		patch2Info[i * 4 + 1] = np.array([topkImg[queryIndex, pairIndex[1]], topkScale[queryIndex, pairIndex[1]], topkW[queryIndex, pairIndex[1]] - trainRegion / 2 + 1 , topkH[queryIndex, pairIndex[1]] + trainRegion / 2])
+		patch2Info[i * 4 + 2] = np.array([topkImg[queryIndex, pairIndex[1]], topkScale[queryIndex, pairIndex[1]], topkW[queryIndex, pairIndex[1]] + trainRegion / 2 , topkH[queryIndex, pairIndex[1]] - trainRegion / 2 + 1])
+		patch2Info[i * 4 + 3] = np.array([topkImg[queryIndex, pairIndex[1]], topkScale[queryIndex, pairIndex[1]], topkW[queryIndex, pairIndex[1]] + trainRegion / 2 , topkH[queryIndex, pairIndex[1]] + trainRegion / 2])
+		
+		
+	iterEpoch = nbSample * 4 / batchSize
 	
-	permutationIndex = np.random.permutation(range(nbSample))
+	permutationIndex = np.random.permutation(range(nbSample * 4)) if shuffle else np.arange(nbSample * 4)
 	sampleIndex = permutationIndex.reshape(( iterEpoch, batchSize)).astype(int)
 	
-	return sampleIndex
+	return patch1Info, patch2Info, sampleIndex
 
 ## Positive loss for a pair of positive matching
 def PosCosineSimilaritytop1(feat1, feat2, pos_w1, pos_h1, pos_w2, pos_h2, variableAllOne) :
@@ -295,24 +313,12 @@ def NegaCosineSimilaritytopk(feat1, feat2, norm2, pos_w1, pos_h1, variableAllOne
 	return torch.mean(negaTopKLoss)
 	
 
-
 	
-def PairPos(pos_w1, pos_h1, pos_w2, pos_h2, trainRegion) : 
-	
-	
-	pos1 = [(pos_w1 , pos_h1 ), (pos_w1, pos_h1 + trainRegion - 1), (pos_w1 + trainRegion - 1, pos_h1), (pos_w1 + trainRegion - 1, pos_h1 + trainRegion - 1)]
-	pos2 = [(pos_w2 , pos_h2 ), (pos_w2, pos_h2 + trainRegion - 1), (pos_w2 + trainRegion - 1, pos_h2), (pos_w2 + trainRegion - 1, pos_h2 + trainRegion - 1)]
-			
-	return pos1, pos2
-	
-def PosNegaSimilarity(posPair, posIndex, topkImg, topkScale, topkW, topkH, searchDir, imgList, strideNet, net, transform, searchRegion, trainRegion, margin, featChannel, useGpu, topKLoss) : 
+def PosNegaSimilarity(patch1Info, patch2Info, index, searchDir, imgList, strideNet, net, transform, searchRegion, trainRegion, margin, featChannel, useGpu, topKLoss) : 
 
 	# Pair information: image name, scale, W, H
-	pair = posPair[posIndex]
-	queryIndex = int(pair[0])
-	pairIndex = [int(pair[1]), int(pair[2])]
-	info1 = (topkImg[queryIndex, pairIndex[0]], topkScale[queryIndex, pairIndex[0]], topkW[queryIndex, pairIndex[0]] - trainRegion / 2 + 1, topkH[queryIndex, pairIndex[0]] - trainRegion / 2 + 1)
-	info2 = (topkImg[queryIndex, pairIndex[1]], topkScale[queryIndex, pairIndex[1]], topkW[queryIndex, pairIndex[1]] - trainRegion / 2 + 1 , topkH[queryIndex, pairIndex[1]] - trainRegion / 2 + 1)
+	info1 = patch1Info[index]
+	info2 = patch2Info[index]
 
 	## features of pair images
 	I1 = Image.open(os.path.join(searchDir, imgList[info1[0]])).convert('RGB')
@@ -332,21 +338,10 @@ def PosNegaSimilarity(posPair, posIndex, topkImg, topkScale, topkW, topkH, searc
 	norm2 = F.conv2d(feat2 ** 2, variableAllOne, stride = 1) ** 0.5 + 1e-7
 	norm1 = F.conv2d(feat1 ** 2, variableAllOne, stride = 1) ** 0.5 + 1e-7
 			
-	pos1, pos2 = PairPos(info1[2], info1[3], info2[2], info2[3], trainRegion)
-	
-	posTop1Similarity = []
-	negaTopKSimilarity = []
-	
-	for (pair1, pair2) in zip(pos1, pos2) : 
-		
-		posTop1Similarity.append( PosCosineSimilaritytop1(feat1, feat2, pair1[0], pair1[1], pair2[0], pair2[1], variableAllOne) )
-		nega1 = NegaCosineSimilaritytopk(feat1, feat2, norm2, pair1[0], pair1[1], variableAllOne, topKLoss)
-		nega2 = NegaCosineSimilaritytopk(feat2, feat1, norm1, pair2[0], pair2[1], variableAllOne, topKLoss)
-		if nega1.data[0] > nega2.data[0] : 
-			negaTopKSimilarity.append(nega1)  
-		else : 
-			negaTopKSimilarity.append(nega2)  
-		
+	posTop1Similarity = PosCosineSimilaritytop1(feat1, feat2, info1[2], info1[3], info2[2], info2[3], variableAllOne)
+	nega1 = NegaCosineSimilaritytopk(feat1, feat2, norm2, info1[2], info1[3], variableAllOne, topKLoss)
+	nega2 = NegaCosineSimilaritytopk(feat2, feat1, norm1, info2[2], info2[3], variableAllOne, topKLoss)
+	negaTopKSimilarity = nega1 if nega1.data[0] > nega2.data[0] else nega2
 	
 	return posTop1Similarity, negaTopKSimilarity
 
