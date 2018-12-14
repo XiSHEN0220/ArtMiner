@@ -23,6 +23,6 @@ cd feature_learning/visualzation/
 python visualize.py --help
 ```
 The images saved into the output directory are like:
-
+<p align="center">
 <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_1.jpg" width="200"> <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_2.jpg" width="200"> 
-
+</p>
