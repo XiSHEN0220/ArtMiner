@@ -23,6 +23,6 @@ cd feature_learning/visualzation/
 python visualize.py --help
 ```
 The images saved into the output directory are like:
-![Brueghel Training examples, Before Training](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_1.jpg) ![Brueghel Training examples, Before Training](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_2.jpg)
+![Brueghel Training examples, Before Training](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_1.jpg){:height="50%" width="50%"} ![Brueghel Training examples, Before Training](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_2.jpg){:height="50%" width="50%"}
 
 
