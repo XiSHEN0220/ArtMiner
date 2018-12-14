@@ -12,7 +12,7 @@ Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections 
 * [Discovery](#discovery)
 
 ### Brueghel Dataset
-The whole Brueghel dataset contains **1587** images, the images and bounding box annotations can be found in ![here](www).
+The whole Brueghel dataset contains **1587** images, the images and bounding box annotations can be found in [here](www).
 
 ### Feature Learning
 #### Visualize Training Data
@@ -23,6 +23,5 @@ cd feature_learning/visualzation/
 python visualize.py --help
 ```
 The images saved into the output directory are like:
-![Brueghel Training examples, Before Training](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_1.jpg&s=100) ![Brueghel Training examples, Before Training](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_2.jpg&s=100)
-
+<img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_1.jpg" width="100"> <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_2.jpg" width="100"> 
 
