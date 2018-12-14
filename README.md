@@ -22,7 +22,7 @@ Please refer to
 cd feature_learning/visualzation/
 python visualize.py --help
 ```
-The examples saved into the output directory are shown below. <b style='color:red'>Red</b> / <b style='color:blue'>Blue</b> / <b style='color:green'>Green</b> region indicates <b style='color:red'>Search</b> / <b style='color:green'>Validate</b> / <b style='color:green'>Train</b> region.
+The examples saved into the output directory are shown below. <span style='color:red'>Red</span> / <b style='color:blue'>Blue</b> / <b style='color:green'>Green</b> region indicates <b style='color:red'>Search</b> / <b style='color:green'>Validate</b> / <b style='color:green'>Train</b> region.
 <p align="center">
 <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_1.jpg" width="300"> <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_2.jpg" width="300"> 
 </p>
