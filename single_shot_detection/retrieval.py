@@ -152,7 +152,7 @@ def Retrieval(searchDir,
 
 
 	print 'Get search image dimension...'
-	searchDim = outils.SearchImgDim(searchDir)
+	searchDim = feature.SearchImgDim(searchDir)
 
 	for k, searchName in enumerate(tqdm(os.listdir(searchDir))) :
 
