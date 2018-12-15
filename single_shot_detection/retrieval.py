@@ -228,7 +228,7 @@ scaleList = outils.ScaleList(args.featScaleBase, args.nbOctave, args.scalePerOct
 
 ## Retrieval
 det, resDict = Retrieval(args.searchDir,
-			args.featMax,
+			args.queryFeatMax,
 			scaleList,
 			strideNet,
 			args.cropSize,
