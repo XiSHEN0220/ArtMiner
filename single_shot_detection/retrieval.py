@@ -25,13 +25,11 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument(
-	'--outDir', type=str , help='output net directory')
 
 ##---- Query Information ----####
 
 parser.add_argument(
-	'--labelJson', type=str , help='label json file')
+	'--labelJson', type=str, default = '../data/brueghelVal.json', help='label json file')
 
 ##---- Search Dataset Setting ----####
 parser.add_argument(
@@ -62,13 +60,13 @@ parser.add_argument(
 	'--cuda', action='store_true', help='cuda setting')
 
 parser.add_argument(
-	'--cropSize', type=int , default = 1, help='Crop Size')
+	'--cropSize', type=int , default = 0, help='Crop Size')
 
 parser.add_argument(
 	'--nbPred', type=int , default = 1000, help='nb of predcition')
 
 parser.add_argument(
-	'--nbDraw', type=int , default = 10, help='nb of draw image')
+	'--nbDraw', type=int , default = 0, help='nb of draw image')
 
 parser.add_argument(
 	'--visualDir', type=str , default = None, help='output image directory')
@@ -182,7 +180,7 @@ def Retrieval(searchDir,
 					hFind.append(index%h)
 					scoreFind.append(score)
 					scaleFind = scaleFind + [int(scaleName) for i in range(len(wFind))]
-					
+
 				## Store results for each image
 				wFind = torch.cat(wFind, dim=1)
 				hFind = torch.cat(hFind, dim=1)
