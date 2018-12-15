@@ -65,7 +65,7 @@ def SearchImgDim(searchDir) :
 
 	searchDim = {}
 	for imgName in os.listdir(searchDir) :
-		I = Image.open(os.path.join(searchDir, img_name)).convert('RGB')
+		I = Image.open(os.path.join(searchDir, imgName)).convert('RGB')
 		searchDim[imgName] = I.size
 
 	return searchDim
