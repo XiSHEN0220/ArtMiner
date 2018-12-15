@@ -1,11 +1,14 @@
 from tqdm import tqdm
-import PIL.Image as Image
-from torch.autograd import Variable
-import PIL.ImageDraw as ImageDraw
 import os
 
-import torch
+import PIL.Image as Image
+import PIL.ImageDraw as ImageDraw
 
+import numpy as np
+
+import torch
+import torch.nn.functional as F
+from torch.autograd import Variable
 
 ## Initialize results of dictionary
 def ResDictInit(query, searchDir) :
@@ -27,7 +30,13 @@ def ScaleList(featScaleBase, nbOctave, scalePerOctave) :
 
 	return scaleList
 
+def CosineSimilarity(img_feat, kernel, kernel_one) :
 
+	dot = F.conv2d(img_feat, kernel)
+	img_feat_norm = F.conv2d(img_feat ** 2, kernel_one) ** 0.5 + 1e-7
+	score = dot/img_feat_norm.expand(dot.size())
+
+	return score.data
 
 def Match(img_feat, kernel, useGpu) :
 
@@ -39,13 +48,7 @@ def Match(img_feat, kernel, useGpu) :
 
 	return score
 
-def CosineSimilarity(img_feat, kernel, kernel_one) :
 
-	dot = F.conv2d(img_feat, kernel)
-	img_feat_norm = F.conv2d(img_feat ** 2, kernel_one) ** 0.5 + 1e-7
-	score = dot/img_feat_norm.expand(dot.size())
-
-	return score.data
 
 ## Non Maximal Suppression
 def NMS(boxes, overlapThresh = 0):
