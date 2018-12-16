@@ -247,7 +247,7 @@ for category in tqdm(det.keys()) :
 			det[category][i][j] = (det[category][i][j][0], 0, det[category][i][j][2])
 
 ## Evaluate Detection
-det, queryTable, categoryTable, mAPPerQuery = eval.Localization(det, label, IoUThresh = args.IoUThreshold, nbPred = args.outPred)
+det, queryTable, categoryTable, mAPPerQuery = eval.Localization(det, label, IoUThresh = args.IoUThreshold, nbPred = args.nbPred)
 
 if args.detTxt :
 	f = open(args.detTxt, 'w')
