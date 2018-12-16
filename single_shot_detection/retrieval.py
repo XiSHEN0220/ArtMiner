@@ -189,12 +189,12 @@ def Retrieval(searchDir,
 				_, indexKeep = torch.sort(scoreFind, descending = True)
 				indexKeep = indexKeep[0, :min(5 * featMax, indexKeep.numel())]
 				infoFind = [(wFind[0, i], hFind[0, i], scaleFind[i], scoreFind[0, i]) for i in indexKeep]
-				res[queryCategory][j_][searchName] = infoFind
+				resDict[queryCategory][j_][searchName] = infoFind
 
 
-	det, res = ResDetection(res, searchDim, queryFeat, strideNet, cropSize, nbPred, label)
+	det, resDict = ResDetection(resDict, searchDim, queryFeat, strideNet, cropSize, nbPred, label)
 
-	return det, res
+	return det, resDict
 
 
 
