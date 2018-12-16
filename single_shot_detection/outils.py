@@ -5,6 +5,7 @@ import PIL.Image as Image
 import PIL.ImageDraw as ImageDraw
 
 import numpy as np
+import feature
 
 import torch
 import torch.nn.functional as F
@@ -150,7 +151,7 @@ def FeatPos2ImgBB(infoFind, kernelSize, imgSize, strideNet, cropSize) :
 
 	for i, item in enumerate(infoFind):
 
-		new_w, new_h = ImgResize(max(kernelSize), item[3], 0, strideNet, imgSize[0], imgSize[1])
+		new_w, new_h, _, _ = feature.ImgResize(max(kernelSize), item[3], 0, strideNet, imgSize[0], imgSize[1])
 		imgFeatDim1 = new_h  / strideNet
 		imgFeatDim2 = new_w  / strideNet
 
