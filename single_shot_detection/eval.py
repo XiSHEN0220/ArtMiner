@@ -1,5 +1,6 @@
 from prettytable import PrettyTable
 import numpy as np
+import outils
 from tqdm import tqdm
 
 def Localization(res, label, IoUThresh = 0.7, nbPred = 100) :
