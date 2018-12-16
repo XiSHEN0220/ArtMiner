@@ -155,7 +155,7 @@ def FeatPos2ImgBB(infoFind, kernelSize, imgSize, strideNet, cropSize) :
 
 		imgFeatDim1 = new_h  / strideNet
 		imgFeatDim2 = new_w  / strideNet
-
+		print imgFeatDim1, imgFeatDim2
 		top = max(item[0]  - cropSize, 0)/float(imgFeatDim1) * imgSize[1]
 		left = max(item[1] - cropSize, 0)/float(imgFeatDim2) * imgSize[0]
 		bottom = min((item[0] + kernelSize[0] + cropSize)/float(imgFeatDim1), 1) * imgSize[1]
