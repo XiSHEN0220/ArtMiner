@@ -179,7 +179,7 @@ def Retrieval(searchDir,
 					wFind.append(index/h)
 					hFind.append(index%h)
 					scoreFind.append(score)
-					scaleFind = scaleFind + [int(scaleName) for i in range(len(wFind))]
+					scaleFind = scaleFind + [int(scaleName) for i in range(len(score))]
 
 				## Store results for each image
 				wFind = torch.cat(wFind, dim=1)
