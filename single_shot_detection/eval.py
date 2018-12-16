@@ -2,7 +2,7 @@ from prettytable import PrettyTable
 import numpy as np
 from tqdm import tqdm
 
-def localization(res, label, IoUThresh = 0.7, nbPred = 100) :
+def Localization(res, label, IoUThresh = 0.7, nbPred = 100) :
 	"""
 	calculate mAP for Pattern Localization task
 	inputs:
