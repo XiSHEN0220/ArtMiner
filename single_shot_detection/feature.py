@@ -54,7 +54,7 @@ def QueryFeat(searchDir, label, featMin, featMax, cropSize, strideNet, margin, u
 			imgFeat=imgFeat[:, :, hTopMargin + cropSize : imgFeat.size()[2] - (hBottomMargin + cropSize), wLeftMargin + cropSize : imgFeat.size()[3] - (wRightMargin + cropSize)].clone().contiguous()
 			norm =torch.sum(torch.sum(torch.sum(imgFeat ** 2, 1, keepdim=True), 2, keepdim=True), 3, keepdim=True)  ** 0.5 + 1e-7
 			imgFeat = imgFeat / norm.expand(imgFeat.size())
-            print imgFeat.size()
+			print imgFeat.size()
 			## store the features to accelerate the code
 			queryFeat[category].append(imgFeat)
 
