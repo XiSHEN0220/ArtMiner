@@ -185,6 +185,7 @@ def Retrieval(searchDir,
 				wFind = torch.cat(wFind, dim=1)
 				hFind = torch.cat(hFind, dim=1)
 				scoreFind = torch.cat(scoreFind, dim=1)
+				print wFind.size(), hFind.size(), scoreFind.size(), scoreFind.size() 
 				_, indexKeep = torch.sort(scoreFind, descending = True)
 
 				indexKeep = indexKeep[0, :min(5 * featMax, indexKeep.numel())]
