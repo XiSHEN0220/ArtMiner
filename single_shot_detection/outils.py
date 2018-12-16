@@ -43,7 +43,7 @@ def Match(img_feat, kernel, useGpu) :
 	feat_out_dim = kernel.size()[0]
 	img_feat = Variable(img_feat)
 	kernel = Variable(kernel)
-	kernel_one = Variable(torch.one((1, 1, kernel.size()[2], kernel.size()[3]))).cuda() if useGpu else Variable(torch.one((1, 1, kernel.size()[2], kernel.size()[3])))
+	kernel_one = Variable(torch.ones(kernel.size())).cuda() if useGpu else Variable(torch.ones(kernel.size()))
 	score = CosineSimilarity(img_feat, kernel, kernel_one)
 
 	return score
