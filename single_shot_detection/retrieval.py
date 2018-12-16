@@ -185,10 +185,12 @@ def Retrieval(searchDir,
 				wFind = torch.cat(wFind, dim=1)
 				hFind = torch.cat(hFind, dim=1)
 				scoreFind = torch.cat(scoreFind, dim=1)
-				print wFind.size(), hFind.size(), scoreFind.size(), scoreFind.size() 
+
 				_, indexKeep = torch.sort(scoreFind, descending = True)
+				print wFind.size(), hFind.size(), scoreFind.size(), scoreFind.size(), indexKeep
 
 				indexKeep = indexKeep[0, :min(5 * featMax, indexKeep.numel())]
+				print indexKeep
 				infoFind = [(wFind[0, i], hFind[0, i], scaleFind[i], scoreFind[0, i]) for i in indexKeep]
 				res[queryCategory][j_][searchName] = infoFind
 
