@@ -109,10 +109,10 @@ optimizer = torch.optim.Adam(net.parameters(), lr=args.lr, betas=(0.5, 0.999))
 featScaleBase = 20 
 nbOctave = 2 
 scalePerOctave = 3
-scales = outils.get_scales(featScaleBase, nbOctave, scalePerOctave)
-msg = 'We search to match in {:d} scales, the max dimensions in the feature maps are:'.format(len(scales))
+scaleList = outils.ScaleList(featScaleBase, nbOctave, scalePerOctave)
+msg = 'We search to match in {:d} scales, the max dimensions in the feature maps are:'.format(len(scaleList))
 print msg
-print scales
+print scaleList
 print '\n\n'
 
 
@@ -133,7 +133,7 @@ for i_ in range(args.nbEpoch) :
 	featQuery = outils.RandomQueryFeat(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, strideNet, transform, net, args.searchDir, args.margin, imgList, args.cuda)
 	
 	print '---> Get top10 patches matching to query...'
-	topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, imgList, args.searchDir, args.margin, args.searchRegion, scales, strideNet, transform, net, featQuery, args.cuda)
+	topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, imgList, args.searchDir, args.margin, args.searchRegion, scaleList, strideNet, transform, net, featQuery, args.cuda)
 	
 	print '---> Get training pairs...'
 	posPair, _ = outils.TrainPair(nbPatchTotal, args.searchDir, imgList, topkImg, topkScale, topkW, topkH, transform, net, args.margin, args.cuda, featChannel, args.searchRegion, args.validRegion, args.nbImgEpoch, strideNet)

@@ -10,11 +10,11 @@ from tqdm import tqdm
 ## Each image in the searching dataset will be resized
 ## The function below defines maximum dimensions in the feature map for different scales
 
-def get_scales(feat_scale_base, nb_octave, scale_per_octave) : 
+def ScaleList(featScaleBase, nbOctave, scalePerOctave) : 
 
-	img_feat_max_scales = np.array([feat_scale_base * (2 ** nb_octave -  2**(float(scale_id)/scale_per_octave)) for scale_id in range(0, 1 + nb_octave * scale_per_octave)]).astype(int) + feat_scale_base
+	scaleList = np.array([featScaleBase * (2 ** nbOctave -  2**(float(scaleId) / scalePerOctave)) for scaleId in range(0, 1 + nbOctave * scalePerOctave)]).astype(int) + featScaleBase
 	
-	return img_feat_max_scales
+	return scaleList
 	
 ## Given a feat_max (maximum dimensions in the feature map)
 ## The function calculate the output size to resize the image with keeping the aspect reatio 
