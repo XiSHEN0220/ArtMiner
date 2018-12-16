@@ -160,7 +160,8 @@ def Retrieval(searchDir,
 
 		for queryCategory in queryFeat.keys() :
 			for j_, featQ in enumerate(queryFeat[queryCategory]) :
-
+				if searchName == label[queryCategory][j_]['query'][0] :
+					continue
 				wFind = []
 				hFind = []
 				scoreFind = []
