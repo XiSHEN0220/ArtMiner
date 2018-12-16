@@ -168,7 +168,7 @@ def Retrieval(searchDir,
 
 				for scaleName in searchFeatDict.keys() :
 
-					featImg = searchFeatDict[scale_name]
+					featImg = searchFeatDict[scaleName]
 					score = outils.Match(featImg, featQ, cuda)
 					score, _ = score.max(dim = 1)
 					w,h = score.size()[1], score.size()[2]
