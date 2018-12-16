@@ -3,7 +3,7 @@ import numpy as np
 import outils
 from tqdm import tqdm
 
-def Localization(res, label, IoUThresh = 0.7, nbPred = 100) :
+def Localization(res, label, IoUThresh = 0.3, nbPred = 1000) :
 	"""
 	calculate mAP for Pattern Localization task
 	inputs:
