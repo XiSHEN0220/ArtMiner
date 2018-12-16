@@ -251,7 +251,7 @@ det, queryTable, categoryTable, mAPPerQuery = eval.Localization(det, label, IoUT
 
 if args.detTxt :
 	f = open(args.detTxt, 'w')
-	msg = '\t\t\t Localization Result of Brueghel (IoU = {:.1f}) \t\t\tNumber prediction {:d}\n'.format(args.IoUThreshold, args.outPred)
+	msg = '\t\t\t Localization Result of Brueghel (IoU = {:.1f}) \t\t\tNumber prediction {:d}\n'.format(args.IoUThreshold, args.nbPred)
 	f.write (msg)
 	f.write(queryTable.get_string())
 	f.write(categoryTable.get_string())
