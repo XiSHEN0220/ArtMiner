@@ -185,7 +185,6 @@ def Retrieval(searchDir,
 				wFind = torch.cat(wFind, dim=1)
 				hFind = torch.cat(hFind, dim=1)
 				scoreFind = torch.cat(scoreFind, dim=1)
-				print score
 				_, indexKeep = torch.sort(scoreFind, descending = True)
 				indexKeep = indexKeep[0, :min(5 * featMax, indexKeep.numel())]
 				infoFind = [(wFind[0, i], hFind[0, i], scaleFind[i], scoreFind[0, i]) for i in indexKeep]
@@ -225,6 +224,7 @@ resDict = outils.ResDictInit(queryFeat, args.searchDir)
 
 ## Scale List
 scaleList = outils.ScaleList(args.featScaleBase, args.nbOctave, args.scalePerOctave)
+print scaleList
 
 ## Retrieval
 det, resDict = Retrieval(args.searchDir,
