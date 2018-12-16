@@ -80,7 +80,7 @@ def SearchFeat(searchDir, featMin, scaleList, strideNet, useGpu, transform, net,
 
 	for scale in scaleList :
 
-		new_w, new_h = ImgResize(featMin, scale, 0, strideNet, w, h)
+		new_w, new_h, _, _ = ImgResize(featMin, scale, 0, strideNet, w, h)
 		IPil = I.resize((new_w, new_h))
 		IData = transform(IPil).unsqueeze(0)
 		IData = Variable(IData, volatile = True).cuda() if cuda else Variable(IData, volatile = True)
