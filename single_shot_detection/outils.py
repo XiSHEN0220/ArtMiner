@@ -151,19 +151,18 @@ def FeatPos2ImgBB(infoFind, kernelSize, imgSize, strideNet, cropSize) :
 
 	for i, item in enumerate(infoFind):
 
-		new_w, new_h, _, _ = feature.ImgResize(max(kernelSize), item[3], 0, strideNet, imgSize[0], imgSize[1])
+		new_w, new_h, _, _ = feature.ImgResize(max(kernelSize), item[2], 0, strideNet, imgSize[0], imgSize[1])
 
 		imgFeatDim1 = new_h  / strideNet
 		imgFeatDim2 = new_w  / strideNet
-		print new_h, new_w
-		
-		top = max(item[1]  - cropSize, 0)/float(imgFeatDim1) * imgSize[1]
-		left = max(item[2] - cropSize, 0)/float(imgFeatDim2) * imgSize[0]
-		bottom = min((item[1] + kernelSize[0] + cropSize)/float(imgFeatDim1), 1) * imgSize[1]
-		right = min((item[2] + kernelSize[1] + cropSize)/float(imgFeatDim2), 1) * imgSize[0]
+
+		top = max(item[0]  - cropSize, 0)/float(imgFeatDim1) * imgSize[1]
+		left = max(item[1] - cropSize, 0)/float(imgFeatDim2) * imgSize[0]
+		bottom = min((item[0] + kernelSize[0] + cropSize)/float(imgFeatDim1), 1) * imgSize[1]
+		right = min((item[1] + kernelSize[1] + cropSize)/float(imgFeatDim2), 1) * imgSize[0]
 
 
-		bb[i] = np.array([left, top, right, bottom, item[-1]]) if item[0] == 0 else np.array([imgSize[0] - right, top, imgSize[0] - left, bottom, item[-1]])
+		bb[i] = np.array([left, top, right, bottom, item[-1]])
 
 	pick = NMS(bb, overlapThresh = 0)
 	bb = bb[pick]
