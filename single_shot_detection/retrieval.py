@@ -179,7 +179,7 @@ def Retrieval(searchDir,
 					wFind.append(index/h)
 					hFind.append(index%h)
 					scoreFind.append(score)
-					scaleFind = scaleFind + [int(scaleName) for i in range(len(score))]
+					scaleFind = scaleFind + [int(scaleName) for i in range(score.size()[1])]
 
 				## Store results for each image
 				wFind = torch.cat(wFind, dim=1)
@@ -187,10 +187,7 @@ def Retrieval(searchDir,
 				scoreFind = torch.cat(scoreFind, dim=1)
 
 				_, indexKeep = torch.sort(scoreFind, descending = True)
-				print wFind.size(), hFind.size(), scoreFind.size(), scoreFind.size(), len(scaleFind), indexKeep
-
 				indexKeep = indexKeep[0, :min(5 * featMax, indexKeep.numel())]
-				print indexKeep
 				infoFind = [(wFind[0, i], hFind[0, i], scaleFind[i], scoreFind[0, i]) for i in indexKeep]
 				res[queryCategory][j_][searchName] = infoFind
 
