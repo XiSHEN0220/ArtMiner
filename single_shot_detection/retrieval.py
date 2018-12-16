@@ -84,7 +84,7 @@ parser.add_argument(
 	'--detJson', type=str , default = None, help='write detection results into json file?')
 
 parser.add_argument(
-	'--detMAPJson', type=str , default = None, help='write detection results (query mAP) into json file?')
+	'--detMAP', type=str , default = None, help='write detection results (query mAP) into json file?')
 
 
 
@@ -262,7 +262,7 @@ if args.detJson :
 		ujson.dump(det, f)
 
 if args.detMAP :
-	with open(args.detMAPJson, 'w') as f :
+	with open(args.detMAP, 'w') as f :
 		ujson.dump(mAPPerQuery, f)
 
 
