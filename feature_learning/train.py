@@ -152,9 +152,10 @@ for i_ in range(args.nbEpoch) :
 		posSimilarityBatch = torch.cat(posSimilarityBatch, dim=0)
 		negaSimilarityBatch = torch.cat(negaSimilarityBatch, dim=0)
 		## Triplet Loss
-		loss = torch.clamp(negaSimilarityBatch - posSimilarityBatch + args.tripleLossThreshold, min=0) 
+		#loss = torch.clamp(negaSimilarityBatch - posSimilarityBatch + args.tripleLossThreshold, min=0)
+		loss = torch.clamp(negaSimilarityBatch  + args.tripleLossThreshold - 1, min=0) + torch.clamp(args.tripleLossThreshold - posSimilarityBatch, min=0)
+		
 		## make sure that gradient is not zero
-
 		if (loss > 0).any() : 
 			loss = loss.mean()
 			loss.backward()
