@@ -3,7 +3,9 @@ Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections 
 
 ## Table of Content
 * [Dependency](#dependency)
-* [Brueghel Dataset](#brueghel-dataset)
+* [Dataset](#dataset)
+	* [Brueghel](#brueghel)
+	* [Large Time Lags Location(Ltll)](#large-time-lags-location(ltll))
 * [Feature Learning](#feature-learning)
 	* [Visualize Training Data](visualize-training-data)
 	* [Train](visualize-training-data)
@@ -19,8 +21,26 @@ The code can be used in **Linux** system with the below dependencies:
 * torchvision
 * Other dependencies: [tqdm](https://github.com/tqdm/tqdm), [ujson](https://pypi.org/project/ujson/)
  
-## Brueghel Dataset
-The whole Brueghel dataset contains **1587** images, the images and bounding box annotations can be found in [here](www).
+## Dataset
+
+### Brughel
+The whole Brueghel dataset contains **1587** images : 
+* Image can be downloaded via 
+``` Bash
+cd data
+bash download_brueghel.sh
+```
+* Validatation / Test annotations are available in *./data/brueghelVal.json* and *./data/brueghelTest.json*
+
+### Large Time Lags Location(Ltll)
+The official site of Ltll is [here](http://users.cecs.anu.edu.au/~basura/beeldcanon/)
+We provide a fast download via : 
+* Image can be downloaded via 
+``` Bash
+cd data
+bash download_ltll.sh
+```
+
 
 ## Feature Learning
 
