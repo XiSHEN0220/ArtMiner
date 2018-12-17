@@ -23,6 +23,7 @@ The code can be used in **Linux** system with the below dependencies:
 The whole Brueghel dataset contains **1587** images, the images and bounding box annotations can be found in [here](www).
 
 ## Feature Learning
+
 ### Visualize Training Data
 It is highly recommended to visualize the training data before the training. 
 Please refer to 
@@ -46,12 +47,29 @@ Please refer to:
 cd feature_learning/visualzation/
 python file2web.py --help
 ```
+### Train
+To train on Brueghel dataset : 
+``` Bash
+cd feature_learning/
+bash brughel.sh
+```
+To train on LTLL dataset : 
+``` Bash
+cd feature_learning/
+bash ltll.sh
+```
+
+If you want to launch the training on your own dataset, indicates the image directory in *--searchDir* in *train.py*.
+Plsease refer to:
+``` Bash
+cd feature_learning/
+python train.py --help
+```
 
 ## Single Shot Detection
 
 We also release our single shot detection code in [single_shot_detection directory](https://github.com/XiSHEN0220/ArtMiner/tree/master/single_shot_detection)
 To use it, please refer to : 
-Please refer to 
 ``` Bash
 cd single_shot_detection
 python retrieval.py --help
