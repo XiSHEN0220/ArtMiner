@@ -24,11 +24,11 @@ python visualize.py --help
 ```
 The examples saved into the output directory are shown below. <b>Red</b> / <b>Blue</b> / <b>Green</b> region indicates <b>Search</b> / <b>Validate</b> / <b>Train</b> region.
 <p align="center">
-<img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_1.jpg" width="450"> <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_2.jpg" width="450"> 
+<img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_1.jpg" width="420"> <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_2.jpg" width="420"> 
 </p>
 
 <p align="center">
-<img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Ltll_Rank1_1.jpg" width="450"> <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Ltll_Rank1_2.jpg" width="450"> 
+<img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Ltll_Rank1_1.jpg" width="420"> <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Ltll_Rank1_2.jpg" width="420"> 
 </p>
 
 
