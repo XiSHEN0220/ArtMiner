@@ -33,7 +33,9 @@ bash download_brueghel.sh
 * Validatation / Test annotations are available in *./data/brueghelVal.json* and *./data/brueghelTest.json*
 
 ### Large Time Lags Location(Ltll)
-The official site of Ltll is [here](http://users.cecs.anu.edu.au/~basura/beeldcanon/)
+
+The official site of Ltll is [here](http://users.cecs.anu.edu.au/~basura/beeldcanon/).
+
 We provide a fast download via : 
 * Image can be downloaded via 
 ``` Bash
@@ -46,6 +48,7 @@ bash download_ltll.sh
 
 ### Visualize Training Data
 It is highly recommended to visualize the training data before the training. 
+
 Please refer to 
 ``` Bash
 cd feature_learning/visualzation/
@@ -62,10 +65,11 @@ The examples saved into the output directory are shown below. <b>Red</b> / <b>Bl
 
 
 We also provide a script generating html table to visualize all pairs. 
+
 Please refer to:
 ``` Bash
 cd feature_learning/visualzation/
-python file2web.py --help
+python file2web.py --imgDir IMAGE_DIRECTORY_HERE --outHtml OUTPUT_HTML_HERE
 ```
 ### Train
 To train on Brueghel dataset : 
