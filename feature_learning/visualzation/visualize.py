@@ -115,13 +115,17 @@ parser.add_argument(
 parser.add_argument(
 	'--saveSize', type=int , default = 256, help='final image size')
 
+parser.add_argument(
+	'--nbSearchImgEpoch', type=int, default = 2000, help='maximum number of searching image in one epoch')
+
+
 args = parser.parse_args()
 tqdm.monitor_interval = 0
 print args
 
 ## Dataset, Minimum dimension, Total patch during the training
 imgList = sorted(os.listdir(args.searchDir))
-nbPatchTotal = 2000
+nbPatchTotal = args.nbSearchImgEpoch
 imgFeatMin = args.searchRegion + 2 * args.margin + 1 ## Minimum dimension of feature map in a image
 msg = '\n\nVisualizing Training data : \n\n In each Epoch, \n\t1. {:d} {:d}X{:d} features are utilized to search candidate regions; \n\t2. we validate on the outermost part in {:d}X{:d} region; \n\t3. We train on 4 corners in the {:d}X{:d} region for the top {:d} pairs; \n\t4. We visualize the training data for one epoch: {:d} patches in {:d} image. Image will be saved into {}, ranked by validation vote. \n\n'.format(nbPatchTotal, args.searchRegion, args.searchRegion, args.validRegion, args.validRegion, args.trainRegion, args.trainRegion, args.nbImgEpoch, args.nbImgEpoch * 4, args.nbImgEpoch, args.outDir)
 print msg
@@ -161,12 +165,20 @@ if not os.path.exists(args.outDir) :
 ## Main Loop
 print '---> Get query...'
 net.eval()
-featQuery = outils.RandomQueryFeat(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, strideNet, transform, net, args.searchDir, args.margin, imgList, args.cuda)
+
+if len(imgList) <= args.nbSearchImgEpoch : 
+	searchImgList = imgList  
+else :
+	index = np.random.permutation(np.arange(len(imgList)))[:args.nbSearchImgEpoch]
+	searchImgList = [imgList[i] for i in index]
+		
+featQuery = outils.RandomQueryFeat(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, strideNet, transform, net, args.searchDir, args.margin, searchImgList, args.cuda)
 
 print '---> Get top10 patches matching to query...'
-topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, imgList, args.searchDir, args.margin, args.searchRegion, scales, strideNet, transform, net, featQuery, args.cuda)
+topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, searchImgList, args.searchDir, args.margin, args.searchRegion, scales, strideNet, transform, net, featQuery, args.cuda)
 
 print '---> Get training pairs...'
-posPair, _ = outils.TrainPair(nbPatchTotal, args.searchDir, imgList, topkImg, topkScale, topkW, topkH, transform, net, args.margin, args.cuda, featChannel, args.searchRegion, args.validRegion, args.nbImgEpoch, strideNet)
+posPair, _ = outils.TrainPair(nbPatchTotal, args.searchDir, searchImgList, topkImg, topkScale, topkW, topkH, transform, net, args.margin, args.cuda, featChannel, args.searchRegion, args.validRegion, args.nbImgEpoch, strideNet)
 
-Visualize(args.outDir, posPair, args.searchRegion, args.trainRegion, args.validRegion, args.searchDir, imgList, topkImg, topkScale, topkW, topkH, args.saveSize, args.margin)
+
+Visualize(args.outDir, posPair, args.searchRegion, args.trainRegion, args.validRegion, args.searchDir, searchImgList, topkImg, topkScale, topkW, topkH, args.saveSize, args.margin)

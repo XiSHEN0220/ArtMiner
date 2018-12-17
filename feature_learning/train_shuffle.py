@@ -74,6 +74,9 @@ parser.add_argument(
 parser.add_argument(
 	'--shuffle', action='store_true', help='shuffle data or not')
 
+parser.add_argument(
+	'--nbSearchImgEpoch', type=int, default = 2000, help='maximum number of searching image in one epoch')
+
 args = parser.parse_args()
 tqdm.monitor_interval = 0
 print args
@@ -81,7 +84,7 @@ print args
 
 ## Dataset, Minimum dimension, Total patch during the training
 imgList = sorted(os.listdir(args.searchDir))
-nbPatchTotal = 2000
+nbPatchTotal = args.nbSearchImgEpoch
 imgFeatMin = args.searchRegion + 2 * args.margin + 1 ## Minimum dimension of feature map in a image 
 iterEpoch = int(args.nbImgEpoch * 4. / args.batchSize) 
 msg = '\n\nAlgo Description : \n\n In each Epoch, \n\t1. {:d} {:d}X{:d} features are utilized to search candidate regions; \n\t2. we validate on the outermost part in {:d}X{:d} region; \n\t3. We train on 4 corners in the {:d}X{:d} region for the top {:d} pairs; \n\t4. Batch size is {:d}, thus each epoch we do {:d} update. \n\n'.format(nbPatchTotal, args.searchRegion, args.searchRegion, args.validRegion, args.validRegion, args.trainRegion, args.trainRegion, args.nbImgEpoch, args.batchSize, iterEpoch)
@@ -130,13 +133,19 @@ for i_ in range(args.nbEpoch) :
 	print 'Training Epoch {:d}'.format(i_)
 	print '---> Get query...'
 	net.eval()
-	featQuery = outils.RandomQueryFeat(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, strideNet, transform, net, args.searchDir, args.margin, imgList, args.cuda)
+	if len(imgList) <= args.nbSearchImgEpoch : 
+		searchImgList = imgList  
+	else :
+		index = np.random.permutation(np.arange(len(imgList)))[:args.nbSearchImgEpoch]
+		searchImgList = [imgList[i] for i in index]
+		 
+	featQuery = outils.RandomQueryFeat(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, strideNet, transform, net, args.searchDir, args.margin, searchImgList, args.cuda)
 	
 	print '---> Get top10 patches matching to query...'
-	topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, imgList, args.searchDir, args.margin, args.searchRegion, scaleList, strideNet, transform, net, featQuery, args.cuda)
+	topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, searchImgList, args.searchDir, args.margin, args.searchRegion, scaleList, strideNet, transform, net, featQuery, args.cuda)
 	
 	print '---> Get training pairs...'
-	posPair, _ = outils.TrainPair(nbPatchTotal, args.searchDir, imgList, topkImg, topkScale, topkW, topkH, transform, net, args.margin, args.cuda, featChannel, args.searchRegion, args.validRegion, args.nbImgEpoch, strideNet)
+	posPair, _ = outils.TrainPair(nbPatchTotal, args.searchDir, searchImgList, topkImg, topkScale, topkW, topkH, transform, net, args.margin, args.cuda, featChannel, args.searchRegion, args.validRegion, args.nbImgEpoch, strideNet)
 	
 	## form mini-batchs 
 	patch1Info, patch2Info, posPairEpoch = outils.DataShuffle(posPair, args.batchSize, args.trainRegion, args.shuffle, topkImg, topkScale, topkW, topkH)
@@ -149,7 +158,7 @@ for i_ in range(args.nbEpoch) :
 		negaSimilarityBatch = []
 		
 		for k_ in range(args.batchSize) : 
-			posSimilarity, negaSimilarity = outils.PosNegaSimilarity(patch1Info, patch2Info, posPairEpoch[j_, k_], args.searchDir, imgList, strideNet, net, transform, args.searchRegion, args.trainRegion, args.margin, featChannel, args.cuda, args.topKLoss)
+			posSimilarity, negaSimilarity = outils.PosNegaSimilarity(patch1Info, patch2Info, posPairEpoch[j_, k_], args.searchDir, searchImgList, strideNet, net, transform, args.searchRegion, args.trainRegion, args.margin, featChannel, args.cuda, args.topKLoss)
 			posSimilarityBatch.append(posSimilarity)
 			negaSimilarityBatch.append(negaSimilarity)
 			

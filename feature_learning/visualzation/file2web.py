@@ -54,7 +54,7 @@ f.write('\t\t<th>Img 1 </th>\n')
 f.write('\t\t<th>Img 2 </th>\n')
 f.write('\t</tr>\n')
 
-nbPair = len(os.listdir(args.imgDir)) ## Nb of row
+nbPair = len(os.listdir(args.imgDir)) / 2 ## Nb of row
 
 for j in range(nbPair) : 
 	f.write('\t<tr >\n')
@@ -64,7 +64,7 @@ for j in range(nbPair) :
 	msg = '\t\t<td><a download=\"{}\" href=\"{}\" title="ImageName"> <img  src=\"{}\" /></a> </td>\n'.format(img1, img1, img1)
 	f.write(msg)## Img 1
 	img2 = os.path.join(args.imgDir, 'Rank{:d}_2.jpg'.format(j))
-	msg = '\t\t<td><a download=\"{}\" href=\"{}\" title="ImageName"> <img  src=\"{}\" /></a> </td>\n'.format(img1, img1, img1)
+	msg = '\t\t<td><a download=\"{}\" href=\"{}\" title="ImageName"> <img  src=\"{}\" /></a> </td>\n'.format(img2, img2, img2)
 	f.write(msg)## Img 2
 	f.write('\t</tr>\n')
 	
