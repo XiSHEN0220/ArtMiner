@@ -60,7 +60,7 @@ bash ltll.sh
 ```
 
 If you want to launch the training on your own dataset, indicates the image directory in *--searchDir* in *train.py*.
-Plsease refer to:
+For more details, please refer to:
 ``` Bash
 cd feature_learning/
 python train.py --help
