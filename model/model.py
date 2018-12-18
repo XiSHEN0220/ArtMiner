@@ -49,7 +49,7 @@ class BasicBlock(nn.Module):
 
 class ResNet_layer3_feature(nn.Module):
 
-	def __init__(self, init_weight_path, resume_model_path = None):
+	def __init__(self, init_weight_path):
 		
 		self.inplanes = 64
 		super(ResNet_layer3_feature, self).__init__()
@@ -114,7 +114,7 @@ class Model(nn.Module):
 	def __init__(self, init_weight_path, resume_model_path = None):
 		
 		super(Model, self).__init__()
-		self.model = ResNet_layer3_feature( init_weight_path, resume_model_path )  
+		self.model = ResNet_layer3_feature( init_weight_path)  
 		if resume_model_path :
 			print 'Loading weight from {}'.format(resume_model_path) 
 			self.load_state_dict(torch.load(resume_model_path))
