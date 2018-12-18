@@ -64,9 +64,7 @@ class ResNet_layer3_feature(nn.Module):
 		if init_weight_path : 
 			self.init_weight(init_weight_path)
 			
-		if resume_model_path :
-			print 'Loading weight from {}'.format(resume_model_path) 
-			self.resume(resume_model_path)
+		
 		
 	def _make_layer(self, block, planes, blocks, stride=1):
 		downsample = None
@@ -117,7 +115,9 @@ class Model(nn.Module):
 		
 		super(Model, self).__init__()
 		self.model = ResNet_layer3_feature( init_weight_path, resume_model_path )  
-		
+		if resume_model_path :
+			print 'Loading weight from {}'.format(resume_model_path) 
+			self.model.load_state_dict(torch.load(resume_model_path))
 				
 	def forward(self, x):
 		x = self.model(x)
