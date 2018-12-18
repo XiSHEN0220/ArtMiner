@@ -75,7 +75,7 @@ parser.add_argument(
 	'--queryFeatMax', type=int , default = 8, help='maximum feature in the query patch')
 
 parser.add_argument(
-	'--IoUThreshold', type=int , default = 0.3, help='IoU threshold')
+	'--IoUThreshold', type=float , default = 0.3, help='IoU threshold')
 
 parser.add_argument(
 	'--detTxt', type=str , default = None, help='write detection results into text file?')
