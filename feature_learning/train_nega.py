@@ -13,7 +13,7 @@ import torch.nn.functional as F
 from torchvision import transforms
 import numpy as np 
 
-import outils_shuffle as outils
+import outils_nega as outils
 from tqdm import tqdm
 import ujson
 import argparse 
@@ -72,11 +72,8 @@ parser.add_argument(
 	'--cuda', action='store_true', help='cuda setting')
 
 parser.add_argument(
-	'--shuffle', action='store_true', help='shuffle data or not')
-
-parser.add_argument(
 	'--nbSearchImgEpoch', type=int, default = 2000, help='maximum number of searching image in one epoch')
-
+	
 args = parser.parse_args()
 tqdm.monitor_interval = 0
 print args
@@ -86,7 +83,7 @@ print args
 imgList = sorted(os.listdir(args.searchDir))
 nbPatchTotal = args.nbSearchImgEpoch
 imgFeatMin = args.searchRegion + 2 * args.margin + 1 ## Minimum dimension of feature map in a image 
-iterEpoch = int(args.nbImgEpoch * 4. / args.batchSize) 
+iterEpoch = args.nbImgEpoch / args.batchSize
 msg = '\n\nAlgo Description : \n\n In each Epoch, \n\t1. {:d} {:d}X{:d} features are utilized to search candidate regions; \n\t2. we validate on the outermost part in {:d}X{:d} region; \n\t3. We train on 4 corners in the {:d}X{:d} region for the top {:d} pairs; \n\t4. Batch size is {:d}, thus each epoch we do {:d} update. \n\n'.format(nbPatchTotal, args.searchRegion, args.searchRegion, args.validRegion, args.validRegion, args.trainRegion, args.trainRegion, args.nbImgEpoch, args.batchSize, iterEpoch)
 print msg
 
@@ -112,10 +109,10 @@ optimizer = torch.optim.Adam(net.parameters(), lr=args.lr, betas=(0.5, 0.999))
 featScaleBase = 20 
 nbOctave = 2 
 scalePerOctave = 3
-scaleList = outils.ScaleList(featScaleBase, nbOctave, scalePerOctave)
-msg = 'We search to match in {:d} scales, the max dimensions in the feature maps are:'.format(len(scaleList))
+scales = outils.get_scales(featScaleBase, nbOctave, scalePerOctave)
+msg = 'We search to match in {:d} scales, the max dimensions in the feature maps are:'.format(len(scales))
 print msg
-print scaleList
+print scales
 print '\n\n'
 
 
@@ -138,17 +135,17 @@ for i_ in range(args.nbEpoch) :
 	else :
 		index = np.random.permutation(np.arange(len(imgList)))[:args.nbSearchImgEpoch]
 		searchImgList = [imgList[i] for i in index]
-		 
+		
 	featQuery = outils.RandomQueryFeat(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, strideNet, transform, net, args.searchDir, args.margin, searchImgList, args.cuda)
 	
 	print '---> Get top10 patches matching to query...'
-	topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, searchImgList, args.searchDir, args.margin, args.searchRegion, scaleList, strideNet, transform, net, featQuery, args.cuda)
+	topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, searchImgList, args.searchDir, args.margin, args.searchRegion, scales, strideNet, transform, net, featQuery, args.cuda)
 	
 	print '---> Get training pairs...'
 	posPair, _ = outils.TrainPair(nbPatchTotal, args.searchDir, searchImgList, topkImg, topkScale, topkW, topkH, transform, net, args.margin, args.cuda, featChannel, args.searchRegion, args.validRegion, args.nbImgEpoch, strideNet)
 	
 	## form mini-batchs 
-	patch1Info, patch2Info, posPairEpoch = outils.DataShuffle(posPair, args.batchSize, args.trainRegion, args.shuffle, topkImg, topkScale, topkW, topkH)
+	posPairEpoch = outils.DataShuffle(posPair, args.batchSize)
 	
 	## Calculate Loss
 	net.train() # switch to train mode
@@ -158,20 +155,17 @@ for i_ in range(args.nbEpoch) :
 		negaSimilarityBatch = []
 		
 		for k_ in range(args.batchSize) : 
-			posSimilarity, negaSimilarity = outils.PosNegaSimilarity(patch1Info, patch2Info, posPairEpoch[j_, k_], args.searchDir, searchImgList, strideNet, net, transform, args.searchRegion, args.trainRegion, args.margin, featChannel, args.cuda, args.topKLoss)
-			posSimilarityBatch.append(posSimilarity)
-			negaSimilarityBatch.append(negaSimilarity)
-			
+			posSimilarity, negaSimilarity = outils.PosNegaSimilarity(posPair, posPairEpoch[j_, k_], topkImg, topkScale, topkW, topkH, args.searchDir, searchImgList, strideNet, net, transform, args.searchRegion, args.trainRegion, args.margin, featChannel, args.cuda, args.topKLoss)
+			posSimilarityBatch = posSimilarityBatch + posSimilarity
+			negaSimilarityBatch = negaSimilarityBatch + negaSimilarity
 		posSimilarityBatch = torch.cat(posSimilarityBatch, dim=0)
 		negaSimilarityBatch = torch.cat(negaSimilarityBatch, dim=0)
 		## Triplet Loss
 		#loss = torch.clamp(negaSimilarityBatch - posSimilarityBatch + args.tripleLossThreshold, min=0)
-		loss = torch.clamp(negaSimilarityBatch  + args.tripleLossThreshold - 1, min=0) + torch.clamp(args.tripleLossThreshold - posSimilarityBatch, min=0)
-		
+		loss = torch.mean(torch.clamp(negaSimilarityBatch  + args.tripleLossThreshold - 1, min=0)) + torch.mean(torch.clamp(args.tripleLossThreshold - posSimilarityBatch, min=0))
 		## make sure that gradient is not zero
-
 		if (loss > 0).any() : 
-			loss = loss.mean()
+			loss = loss
 			loss.backward()
 			optimizer.step()
 
