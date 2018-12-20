@@ -117,6 +117,15 @@ parser.add_argument(
 
 parser.add_argument(
 	'--nbSearchImgEpoch', type=int, default = 2000, help='maximum number of searching image in one epoch')
+	
+parser.add_argument(
+	'--featScaleBase', type=int, default = 20, help='number of features in the max dimension of the minimum scale')
+
+parser.add_argument(
+	'--nbOctave', type=int, default = 2, help='number of octave')
+
+parser.add_argument(
+	'--scalePerOctave', type=int, default = 3, help='number of scales / octave')
 
 
 args = parser.parse_args()
@@ -148,10 +157,8 @@ if args.cuda:
 
 
 ## Scales
-featScaleBase = 20
-nbOctave = 2
-scalePerOctave = 3
-scales = outils.get_scales(featScaleBase, nbOctave, scalePerOctave)
+
+scales = outils.get_scales(args.featScaleBase, args.nbOctave, args.scalePerOctave)
 msg = 'We search to match in {:d} scales, the max dimensions in the feature maps are:'.format(len(scales))
 print msg
 print scales
