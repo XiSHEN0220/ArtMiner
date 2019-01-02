@@ -37,7 +37,7 @@ parser.add_argument(
 	'--searchRegion', type=int, default=2, help='feat size')
 	
 parser.add_argument(
-	'--trainRegion', type=int, choices=[2, 4, 6, 8, 10, 12, 14], default = 12, help='train region, 2, 4, 6, 8, 10, 12, 14')
+	'--trainRegion', type=int, default = 12, help='train region')
 	
 parser.add_argument(
 	'--validRegion', type=int, default= 10, help='validation region')
@@ -83,7 +83,9 @@ parser.add_argument(
 parser.add_argument(
 	'--scalePerOctave', type=int, default = 3, help='number of scales / octave')
 
-	
+parser.add_argument(
+	'--queryScale', type=int, nargs='+', default = [68, 60, 49, 40, 36], help='query image scale')
+
 args = parser.parse_args()
 tqdm.monitor_interval = 0
 print args
@@ -143,7 +145,7 @@ for i_ in range(args.nbEpoch) :
 		index = np.random.permutation(np.arange(len(imgList)))[:args.nbSearchImgEpoch]
 		searchImgList = [imgList[i] for i in index]
 		
-	featQuery = outils.RandomQueryFeat(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, strideNet, transform, net, args.searchDir, args.margin, searchImgList, args.cuda)
+	featQuery = outils.RandomQueryFeat(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, strideNet, transform, net, args.searchDir, args.margin, searchImgList, args.cuda, args.queryScale)
 	
 	print '---> Get top10 patches matching to query...'
 	topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, searchImgList, args.searchDir, args.margin, args.searchRegion, scales, strideNet, transform, net, featQuery, args.cuda)

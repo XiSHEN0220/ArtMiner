@@ -46,7 +46,7 @@ class InfiniteSampler():
 
 ## Random Query Feature
 
-def RandomQueryFeat(nbPatchTotal, featChannel, searchRegion, imgFeatMin, strideNet, transform, net, searchDir, margin, imgList, useGpu) : 
+def RandomQueryFeat(nbPatchTotal, featChannel, searchRegion, imgFeatMin, strideNet, transform, net, searchDir, margin, imgList, useGpu, queryScale) : 
 
 	featQuery = torch.cuda.FloatTensor(nbPatchTotal, featChannel, searchRegion, searchRegion) # Store feature
 	img_sampler = InfiniteSampler(imgList)
@@ -59,7 +59,8 @@ def RandomQueryFeat(nbPatchTotal, featChannel, searchRegion, imgFeatMin, strideN
 		## resize image
 		I = Image.open(os.path.join(searchDir, img_name)).convert('RGB')
 		w,h = I.size
-		scale = np.random.choice([68, 60, 49, 40, 36]) ## Predefine some scales
+		scale = np.random.choice(queryScale) ## Predefine some scales
+		
 		new_w, new_h = resize_dim_image(imgFeatMin, scale, strideNet, w, h)
 		I = I.resize((new_w, new_h))
 		
@@ -189,8 +190,8 @@ def VotePair(searchDir, imgList, topkImg, topkScale, topkW, topkH, transform, ne
 	# Sample a pair
 	queryIndex = np.random.choice(len(topkImg))
 	imgPair = np.random.choice(range(10), 2, replace=False)
-	info1 = (topkImg[queryIndex, imgPair[0]], topkScale[queryIndex, imgPair[0]], topkW[queryIndex, imgPair[0]] - validRegion / 2 + 1, topkH[queryIndex, imgPair[0]] - validRegion / 2 + 1)
-	info2 = (topkImg[queryIndex, imgPair[1]], topkScale[queryIndex, imgPair[1]], topkW[queryIndex, imgPair[1]] - validRegion / 2 + 1, topkH[queryIndex, imgPair[1]] - validRegion / 2 + 1)
+	info1 = (topkImg[queryIndex, imgPair[0]], topkScale[queryIndex, imgPair[0]], topkW[queryIndex, imgPair[0]] - ( validRegion + 1) / 2 + 1, topkH[queryIndex, imgPair[0]] - (validRegion + 1) / 2 + 1)
+	info2 = (topkImg[queryIndex, imgPair[1]], topkScale[queryIndex, imgPair[1]], topkW[queryIndex, imgPair[1]] - ( validRegion + 1) / 2 + 1, topkH[queryIndex, imgPair[1]] - (validRegion + 1) / 2 + 1)
 	
 	# Image 1 Feature
 	I1 = Image.open(os.path.join(searchDir, imgList[info1[0]])).convert('RGB')
@@ -311,8 +312,8 @@ def PosNegaSimilarity(posPair, posIndex, topkImg, topkScale, topkW, topkH, searc
 	pair = posPair[posIndex]
 	queryIndex = int(pair[0])
 	pairIndex = [int(pair[1]), int(pair[2])]
-	info1 = (topkImg[queryIndex, pairIndex[0]], topkScale[queryIndex, pairIndex[0]], topkW[queryIndex, pairIndex[0]] - trainRegion / 2 + 1, topkH[queryIndex, pairIndex[0]] - trainRegion / 2 + 1)
-	info2 = (topkImg[queryIndex, pairIndex[1]], topkScale[queryIndex, pairIndex[1]], topkW[queryIndex, pairIndex[1]] - trainRegion / 2 + 1 , topkH[queryIndex, pairIndex[1]] - trainRegion / 2 + 1)
+	info1 = (topkImg[queryIndex, pairIndex[0]], topkScale[queryIndex, pairIndex[0]], topkW[queryIndex, pairIndex[0]] - (trainRegion + 1) / 2 + 1, topkH[queryIndex, pairIndex[0]] - (trainRegion + 1) / 2 + 1)
+	info2 = (topkImg[queryIndex, pairIndex[1]], topkScale[queryIndex, pairIndex[1]], topkW[queryIndex, pairIndex[1]] - (trainRegion + 1) / 2 + 1 , topkH[queryIndex, pairIndex[1]] - (trainRegion + 1) / 2 + 1)
 
 	## features of pair images
 	I1 = Image.open(os.path.join(searchDir, imgList[info1[0]])).convert('RGB')
