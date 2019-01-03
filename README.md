@@ -94,7 +94,7 @@ cd feature_learning/
 python train.py --help
 ```
 
-### Single Shot Detection
+## Single Shot Detection
 
 We also release our single shot detection code in [single_shot_detection directory](https://github.com/XiSHEN0220/ArtMiner/tree/master/single_shot_detection)
 To utilize it, please refer to : 
@@ -103,9 +103,9 @@ cd single_shot_detection
 python retrieval.py --help
 ```
 
-### Discovery
+## Discovery
 
-## Pair Discovery 
+### Pair Discovery 
 
 To launch discovery between a pair of images, please utilize the script in *discovery/pair_discovery.py*. 
 A command example is given in *discovery/pair_discovery.sh*, user need to modify parameter *imagenetFeatPath* and/or *finetunePath*, then running with :
