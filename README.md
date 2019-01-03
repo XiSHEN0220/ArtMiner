@@ -13,6 +13,7 @@ Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections 
 
 * [Single Shot Detection](#single-shot-detection)
 * [Discovery](#discovery)
+	* [Pair Discovery](#pair-discovery)
 
 ## Dependency
 The code can be used in **Linux** system with the below dependencies:
@@ -36,12 +37,14 @@ bash download_brueghel.sh
 
 The official site of Ltll is [here](http://users.cecs.anu.edu.au/~basura/beeldcanon/).
 
-We provide a fast download via : 
+We provide a fast download : 
 * Image can be downloaded via 
 ``` Bash
 cd data
 bash download_ltll.sh
 ```
+* Annotations are available in the dictionary *./data/ltll.json*, Validatation / Test are splitted by the key 'val' and 'test' in the dictionary. 
+
 
 
 ## Feature Learning
@@ -55,13 +58,14 @@ cd feature_learning/visualzation/
 python visualize.py --help
 ```
 The examples saved into the output directory are shown below. <b>Red</b> / <b>Blue</b> / <b>Green</b> region indicates <b>Search</b> / <b>Validate</b> / <b>Train</b> region.
-<p align="center">
-<img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_1.jpg" width="420"> <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_2.jpg" width="420"> 
-</p>
 
-<p align="center">
-<img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Ltll_Rank1_1.jpg" width="420"> <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Ltll_Rank1_2.jpg" width="420"> 
-</p>
+|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_1.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_2.jpg)|
+|:---:|:---:|
+| Brueghel Image 1 | Brueghel Image 2 |
+
+|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Ltll_Rank1_1.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Ltll_Rank1_2.jpg)|
+|:---:|:---:|
+| Ltll Image 1 | Ltll Image 2 |
 
 
 We also provide a script generating html table to visualize all pairs. 
@@ -90,14 +94,34 @@ cd feature_learning/
 python train.py --help
 ```
 
-## Single Shot Detection
+### Single Shot Detection
 
 We also release our single shot detection code in [single_shot_detection directory](https://github.com/XiSHEN0220/ArtMiner/tree/master/single_shot_detection)
-To use it, please refer to : 
+To utilize it, please refer to : 
 ``` Bash
 cd single_shot_detection
 python retrieval.py --help
 ```
+
+### Discovery
+
+## Pair Discovery 
+
+To launch discovery between a pair of images, please utilize the script in *discovery/pair_discovery.py*. 
+A command example is given in *discovery/pair_discovery.sh*, user need to modify parameter *imagenetFeatPath* and/or *finetunePath*, then running with :
+``` Bash
+cd discovery
+bash pair_discovery.sh
+```
+
+The results of discovery between a pair of images : 
+
+|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/toto1.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/toto2.png)|
+|:---:|:---:|
+| Discovery Image 1 | Discovery Image 2 |
+
+
+
 
 
 
