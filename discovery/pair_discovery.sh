@@ -1,0 +1,1 @@
+python pair_discovery.py --cuda --tolerance 2. --scaleImgRef 40 --houghInitial --img1Path ../data/Brueghel/Flowers\ in\ a\ Tazza\ \(Netherlands\).jpg --img2Path ../data/Brueghel/Flowers\ in\ Basket\ and\ Tazza\ \(Hartford\).jpg --out1 toto1.png --out2 toto2.png
