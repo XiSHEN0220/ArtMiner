@@ -46,7 +46,7 @@ bash download_models.sh
 
 ## Single Shot Detection
 
-To test performance on single shot detection,
+To test performance on single shot detection:
 ``` Bash
 cd single_shot_detection
 bash run_FeatImageNet.sh # ImageNet feature
@@ -107,13 +107,13 @@ python train.py --help
 ### Pair Discovery 
 
 To launch discovery between a pair of images, please utilize the script in *discovery/pair_discovery.py*. 
-A command example is given in *discovery/pair_discovery.sh*, user need to modify parameter *imagenetFeatPath* and/or *finetunePath*, then running with :
+One example of command is in *discovery/pair_discovery.sh* :
 ``` Bash
 cd discovery
 bash pair_discovery.sh
 ```
 
-The results of discovery between a pair of images : 
+The results of discovery between the pair of images : 
 
 |![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/toto1.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/toto2.png)|
 |:---:|:---:|
