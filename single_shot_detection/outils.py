@@ -145,20 +145,18 @@ def IoU(bbox, bboxArray):
 
 	return ratio
 
-def FeatPos2ImgBB(infoFind, kernelSize, imgSize, strideNet, cropSize) :
+def FeatPos2ImgBB(infoFind, kernelSize, imgSize, minNet, strideNet, cropSize) :
 
 	bb = np.zeros((len(infoFind), 5))
 
 	for i, item in enumerate(infoFind):
 
-		new_w, new_h, _, _ = feature.ImgResize(max(kernelSize), item[2], 0, strideNet, imgSize[0], imgSize[1])
-
-		imgFeatDim1 = new_h  / strideNet
-		imgFeatDim2 = new_w  / strideNet
-		top = max(item[0]  - cropSize, 0)/float(imgFeatDim1) * imgSize[1]
-		left = max(item[1] - cropSize, 0)/float(imgFeatDim2) * imgSize[0]
-		bottom = min((item[0] + kernelSize[0] + cropSize)/float(imgFeatDim1), 1) * imgSize[1]
-		right = min((item[1] + kernelSize[1] + cropSize)/float(imgFeatDim2), 1) * imgSize[0]
+		new_w, new_h, _, _ = ImgResize(max(kernelSize), item[2], 0, minNet, strideNet, imgSize[0], imgSize[1])
+		hratio, wratio =  imgSize[1] / float(new_h), imgSize[0] / float(new_w)
+		top = int(max(item[0]  - cropSize, 0) * strideNet * hratio )
+		left = int(max(item[1]  - cropSize, 0) * strideNet * wratio)
+		bottom = min((item[0] + kernelSize[0] + cropSize - 1) * strideNet + minNet, new_h) *hratio 
+		right = min((item[1] + kernelSize[1] + cropSize - 1) * strideNet + minNet, new_w) *wratio 
 
 
 		bb[i] = np.array([left, top, right, bottom, item[-1]])

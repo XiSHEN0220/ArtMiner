@@ -4,7 +4,7 @@ import PIL.Image as Image
 from tqdm import tqdm
 import os
 
-def ImgResize(featMin, featMax, cropSize, strideNet, w, h) :
+def ImgResize(featMin, featMax, cropSize, minNet, strideNet, w, h) :
 
 	ratio = float(w)/h
 	if ratio < 1 :
@@ -14,13 +14,13 @@ def ImgResize(featMin, featMax, cropSize, strideNet, w, h) :
 	else :
 		feat_w = featMax + 2 * cropSize
 		feat_h = max(round(feat_w/ratio), featMin + 2 * cropSize)
-	new_w = feat_w * strideNet
-	new_h = feat_h * strideNet
+	new_w = (feat_w-1) * strideNet + minNet
+	new_h = (feat_h-1) * strideNet + minNet
 
 	return int(new_w), int(new_h), float(new_w)/w, float(new_h)/h
 
 ## Calculate all the query feature, store in a dictionary
-def QueryFeat(searchDir, label, featMin, featMax, cropSize, strideNet, margin, useGpu, transform, model) :
+def QueryFeat(searchDir, label, featMin, featMax, cropSize, minNet, strideNet, margin, useGpu, transform, model) :
 	print '\nGet query feature...\n'
 	queryFeat = {}
 	for category in tqdm(label.keys()) :
@@ -33,7 +33,7 @@ def QueryFeat(searchDir, label, featMin, featMax, cropSize, strideNet, margin, u
 			bb = item['query'][1]
 
 			## resize the query image to a proper size
-			_,_, wRatio, hRatio =  ImgResize(featMin, featMax, cropSize, strideNet,bb[2] - bb[0], bb[3] - bb[1])
+			_,_, wRatio, hRatio =  ImgResize(featMin, featMax, cropSize, minNet, strideNet,bb[2] - bb[0], bb[3] - bb[1])
 			bb0, bb1, bb2, bb3 = bb[0] * wRatio, bb[1] * hRatio, bb[2] * wRatio, bb[3] * hRatio
 			imgPil = imgPil.resize((int(w * wRatio), int(h * hRatio)))
 
@@ -71,7 +71,7 @@ def SearchImgDim(searchDir) :
 	return searchDim
 
 ## Search Image Feature
-def SearchFeat(searchDir, featMin, scaleList, strideNet, useGpu, transform, net, searchName) :
+def SearchFeat(searchDir, featMin, scaleList, minNet, strideNet, useGpu, transform, net, searchName) :
 
 	searchFeat = {}
 
@@ -80,7 +80,7 @@ def SearchFeat(searchDir, featMin, scaleList, strideNet, useGpu, transform, net,
 
 	for scale in scaleList :
 
-		new_w, new_h, _, _ = ImgResize(featMin, scale, 0, strideNet, w, h)
+		new_w, new_h, _, _ = ImgResize(featMin, scale, 0, minNet, strideNet, w, h)
 		IPil = I.resize((new_w, new_h))
 		IData = transform(IPil).unsqueeze(0)
 		IData = Variable(IData, volatile = True).cuda() if useGpu else Variable(IData, volatile = True)

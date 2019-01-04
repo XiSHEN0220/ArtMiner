@@ -93,7 +93,7 @@ tqdm.monitor_interval = 0
 print args
 
 
-def ResDetection(res, searchDim, queryFeat, strideNet, cropSize, nbPred, label) :
+def ResDetection(res, searchDim, queryFeat, minNet, strideNet, cropSize, nbPred, label) :
 	det = {}
 	resFinal = {}
 	for category in res.keys():
@@ -118,7 +118,7 @@ def ResDetection(res, searchDim, queryFeat, strideNet, cropSize, nbPred, label) 
 
 				infoFind = item[searchName]
 				imgSize = searchDim[searchName]
-				bb, infoFind = outils.FeatPos2ImgBB(infoFind, kernelSize, imgSize, strideNet, cropSize)
+				bb, infoFind = FeatPos2ImgBB(infoFind, kernelSize, imgSize, minNet, strideNet, cropSize)
 
 				bbs.append(bb)
 				infos = infos + infoFind
@@ -140,6 +140,7 @@ def ResDetection(res, searchDim, queryFeat, strideNet, cropSize, nbPred, label) 
 def Retrieval(searchDir,
 			featMax,
 			scaleList,
+			minNet,  
 			strideNet,
 			cropSize,
 			cuda,
@@ -156,7 +157,7 @@ def Retrieval(searchDir,
 
 	for k, searchName in enumerate(tqdm(os.listdir(searchDir))) :
 
-		searchFeatDict = feature.SearchFeat(searchDir, featMax, scaleList, strideNet, cuda, transform, net, searchName)
+		searchFeatDict = SearchFeat(searchDir, featMax, scaleList, minNet, strideNet, cuda, transform, net, searchName)
 
 		for queryCategory in queryFeat.keys() :
 			for j_, featQ in enumerate(queryFeat[queryCategory]) :
@@ -192,10 +193,9 @@ def Retrieval(searchDir,
 				resDict[queryCategory][j_][searchName] = infoFind
 
 
-	det, resDict = ResDetection(resDict, searchDim, queryFeat, strideNet, cropSize, nbPred, label)
+	det, resDict = ResDetection(resDict, searchDim, queryFeat, minNet, strideNet, cropSize, nbPred, label)
 
 	return det, resDict
-
 
 
 
@@ -207,6 +207,7 @@ transform = transforms.Compose([
 
 ## net Initialize
 strideNet = 16
+minNet = 15
 featChannel = 256
 net = Model(args.imagenetFeatPath, args.finetunePath)
 if args.cuda:
@@ -231,6 +232,7 @@ print scaleList
 det, resDict = Retrieval(args.searchDir,
 			args.queryFeatMax,
 			scaleList,
+			minNet,
 			strideNet,
 			args.cropSize,
 			args.cuda,
