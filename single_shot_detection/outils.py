@@ -160,8 +160,8 @@ def FeatPos2ImgBB(infoFind, kernelSize, imgSize, minNet, strideNet, cropSize) :
 		featW, featH = (new_h - minNet) /strideNet + 1, (new_w - minNet) /strideNet + 1
 		top =  int(max(item[0]  - cropSize, 0) / float(featW) * imgSize[1])
 		left =  int(max(item[1]  - cropSize, 0) / float(featH) * imgSize[0])
-		bottom =  int(min(item[0]  + kernelSize[0] + cropSize, featW) / float(featW) * imgSize[0])
-		right =  int(min(item[1]  + kernelSize[1] + cropSize, featH) / float(featH) * imgSize[1])
+		bottom =  int(min(item[0]  + kernelSize[0] + cropSize, featW) / float(featW) * imgSize[1])
+		right =  int(min(item[1]  + kernelSize[1] + cropSize, featH) / float(featH) * imgSize[0])
 
 
 		bb[i] = np.array([left, top, right, bottom, item[-1]])
