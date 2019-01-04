@@ -152,11 +152,16 @@ def FeatPos2ImgBB(infoFind, kernelSize, imgSize, minNet, strideNet, cropSize) :
 	for i, item in enumerate(infoFind):
 
 		new_w, new_h, _, _ = feature.ImgResize(max(kernelSize), item[2], 0, minNet, strideNet, imgSize[0], imgSize[1])
-		hratio, wratio =  imgSize[1] / float(new_h), imgSize[0] / float(new_w)
-		top = int(max(item[0]  - cropSize, 0) * strideNet * hratio )
-		left = int(max(item[1]  - cropSize, 0) * strideNet * wratio)
-		bottom = min((item[0] + kernelSize[0] + cropSize - 1) * strideNet + minNet, new_h) *hratio 
-		right = min((item[1] + kernelSize[1] + cropSize - 1) * strideNet + minNet, new_w) *wratio 
+		#hratio, wratio =  imgSize[1] / float(new_h), imgSize[0] / float(new_w)
+		#top = int(max(item[0]  - cropSize, 0) * strideNet * hratio )
+		#left = int(max(item[1]  - cropSize, 0) * strideNet * wratio)
+		#bottom = min((item[0] + kernelSize[0] + cropSize - 1) * strideNet + minNet, new_h) *hratio
+		#right = min((item[1] + kernelSize[1] + cropSize - 1) * strideNet + minNet, new_w) *wratio
+		featW, featH = (new_h - minNet) /strideNet + 1, (new_w - minNet) /strideNet + 1
+		top =  int(max(item[0]  - cropSize, 0) / float(featW) * imgSize[1])
+		left =  int(max(item[1]  - cropSize, 0) / float(featH) * imgSize[0])
+		bottom =  int(min(item[0]  + kernelSize[0] + cropSize, featW) / float(featW) * imgSize[0])
+		right =  int(min(item[1]  + kernelSize[1] + cropSize, featH) / float(featH) * imgSize[1])
 
 
 		bb[i] = np.array([left, top, right, bottom, item[-1]])
