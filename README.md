@@ -12,6 +12,7 @@ Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections 
 ### Dependencies
 
 The code can be used in **Linux** system with the the following dependencies: Python 2.7, Pytorch 0.3.0.post4, torchvision, tqdm, ujson, cv2, scipy
+
 We recommend to utilize virtual environment to install all dependencies and test the code. One choice is [virtualenv](https://virtualenv.pypa.io/en/latest/). 
 
 To install pytorch 0.3.0.post4 + cuda 8.0 (For other cuda version (9.0, 7.5), the only modification is to change *cu80* to your cuda version):
@@ -27,30 +28,16 @@ bash requirement.sh
 
 
  
-### Dataset
+### Dataset and Model
 
-#### Brughel
-The whole Brueghel dataset contains **1587** images, to download the dataset: 
+To download datasets (Brueghel + Ltll) : 
 ``` Bash
 cd data
 bash download_brueghel.sh
-```
-Validatation / Test annotations are available in *./data/brueghelVal.json* and *./data/brueghelTest.json*
-
-#### Large Time Lags Location(Ltll)
-
-The official site of Ltll is [here](http://users.cecs.anu.edu.au/~basura/beeldcanon/).
-
-We provide a fast download : 
-``` Bash
-cd data
 bash download_ltll.sh
 ```
-Annotations are available in the dictionary *./data/ltll.json*, Validatation / Test are splitted by the key 'val' and 'test' in the dictionary. 
 
-### Pretrained models
-
-To download pretrained models : 
+To download pretrained model : 
 ``` Bash
 cd model
 bash download_models.sh
