@@ -151,7 +151,7 @@ def FeatPos2ImgBB(infoFind, kernelSize, imgSize, minNet, strideNet, cropSize) :
 
 	for i, item in enumerate(infoFind):
 
-		new_w, new_h, _, _ = ImgResize(max(kernelSize), item[2], 0, minNet, strideNet, imgSize[0], imgSize[1])
+		new_w, new_h, _, _ = feature.ImgResize(max(kernelSize), item[2], 0, minNet, strideNet, imgSize[0], imgSize[1])
 		hratio, wratio =  imgSize[1] / float(new_h), imgSize[0] / float(new_w)
 		top = int(max(item[0]  - cropSize, 0) * strideNet * hratio )
 		left = int(max(item[1]  - cropSize, 0) * strideNet * wratio)
