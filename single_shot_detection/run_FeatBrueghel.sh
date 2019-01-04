@@ -1,0 +1,1 @@
+python retrieval.py --labelJson ../data/brueghelTest.json --margin 5 --cuda --cropSize 0 --nbPred 1000 --nbDraw 10 --visualDir brueghelResNet --queryFeatMax 8 --IoUThreshold 0.3 --detTxt brueghelResNet.txt --detJson brueghelResNetDet.json --detMAP brueghelResNetmAP.json --finetunePath ../model/brueghelModel.pth
