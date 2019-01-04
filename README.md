@@ -46,10 +46,11 @@ bash download_models.sh
 
 ## Single Shot Detection
 
-To test performance on single shot detection, please refer to : 
+To test performance on single shot detection,
 ``` Bash
 cd single_shot_detection
-python retrieval.py --help
+bash run_FeatImageNet.sh # ImageNet feature
+bash run_FeatBrueghel.sh # Brueghel feature
 ```
 
 ## Feature Learning
