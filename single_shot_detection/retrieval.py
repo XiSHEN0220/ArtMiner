@@ -118,7 +118,7 @@ def ResDetection(res, searchDim, queryFeat, minNet, strideNet, cropSize, nbPred,
 
 				infoFind = item[searchName]
 				imgSize = searchDim[searchName]
-				bb, infoFind = FeatPos2ImgBB(infoFind, kernelSize, imgSize, minNet, strideNet, cropSize)
+				bb, infoFind = outils.FeatPos2ImgBB(infoFind, kernelSize, imgSize, minNet, strideNet, cropSize)
 
 				bbs.append(bb)
 				infos = infos + infoFind
@@ -157,7 +157,7 @@ def Retrieval(searchDir,
 
 	for k, searchName in enumerate(tqdm(os.listdir(searchDir))) :
 
-		searchFeatDict = SearchFeat(searchDir, featMax, scaleList, minNet, strideNet, cuda, transform, net, searchName)
+		searchFeatDict = feature.SearchFeat(searchDir, featMax, scaleList, minNet, strideNet, cuda, transform, net, searchName)
 
 		for queryCategory in queryFeat.keys() :
 			for j_, featQ in enumerate(queryFeat[queryCategory]) :
