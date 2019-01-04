@@ -219,7 +219,7 @@ with open(args.labelJson, 'r') as f :
 	label = ujson.load(f)
 
 ## get query feature
-queryFeat = feature.QueryFeat(args.searchDir, label, 1, args.queryFeatMax, args.cropSize, strideNet, args.margin, args.cuda, transform, net)
+queryFeat = feature.QueryFeat(args.searchDir, label, 1, args.queryFeatMax, args.cropSize, minNet, strideNet, args.margin, args.cuda, transform, net)
 
 ## Initialize dictionary to store results
 resDict = outils.ResDictInit(queryFeat, args.searchDir)
