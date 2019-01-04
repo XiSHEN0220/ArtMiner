@@ -33,8 +33,7 @@ bash requirement.sh
 To download datasets (Brueghel + Ltll) : 
 ``` Bash
 cd data
-bash download_brueghel.sh
-bash download_ltll.sh
+bash download_dataset.sh
 ```
 
 To download pretrained model : 
