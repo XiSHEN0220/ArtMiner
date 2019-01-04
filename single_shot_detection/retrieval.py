@@ -45,10 +45,10 @@ parser.add_argument(
 ##---- Training parameters ----####
 
 parser.add_argument(
-	'--imagenetFeatPath', type=str, default='../../pre-trained-models/resnet18.pth', help='imageNet feature net weight path')
+	'--imagenetFeatPath', type=str, default='../model/resnet18.pth', help='imageNet feature net weight path')
 
 parser.add_argument(
-	'--finetunePath', type=str, help='finetune net weight path')
+	'--finetunePath', type=str, default='../model/brueghelModel.pth', help='finetune net weight path')
 
 parser.add_argument(
 	'--searchDir', type=str, default= '../data/Brueghel/', help='searching directory')

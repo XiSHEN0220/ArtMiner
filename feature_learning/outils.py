@@ -234,7 +234,7 @@ def VotePair(searchDir, imgList, topkImg, topkScale, topkW, topkH, transform, ne
 	score = torch.sum(mask)
 	return queryIndex, imgPair, score
 
-
+'''
 def TrainPair(nbPairTotal, searchDir, imgList, topkImg, topkScale, topkW, topkH, transform, net, margin, useGpu, featChannel, searchRegion, validRegion, nbImgEpoch, strideNet) : 
 
 	pairInfo = torch.zeros((nbPairTotal, 4)).cuda() if useGpu else torch.zeros((nbPairTotal, 4)) # query_index, pair1, pair2, score
@@ -248,6 +248,28 @@ def TrainPair(nbPairTotal, searchDir, imgList, topkImg, topkScale, topkW, topkH,
 		pairInfo[count, 2] = imgPair[1]
 		pairInfo[count, 3] = score
 		count += 1
+		if count % 500 == 499 : 
+			print count 
+
+	score_sort, score_sort_index = pairInfo[:, 3].sort(descending=True)
+	pairInfo = pairInfo[score_sort_index]
+	return pairInfo[:nbImgEpoch], pairInfo[-nbImgEpoch:]
+'''
+
+def TrainPair(searchDir, imgList, topkImg, topkScale, topkW, topkH, transform, net, margin, useGpu, featChannel, searchRegion, validRegion, nbImgEpoch, strideNet) : 
+
+	pairInfo = torch.zeros((nbImgEpoch, 4)).cuda() if useGpu else torch.zeros((nbPairTotal, 4)) # query_index, pair1, pair2, score
+	count = 0
+	minScore = (validRegion * 4 - 4) * 0.6
+	while count < nbImgEpoch :
+		
+		queryIndex, imgPair, score = VotePair(searchDir, imgList, topkImg, topkScale, topkW, topkH, transform, net, margin, validRegion, searchRegion, featChannel, useGpu, strideNet)
+		if score >= minScore : 
+			pairInfo[count, 0] = queryIndex
+			pairInfo[count, 1] = imgPair[0]
+			pairInfo[count, 2] = imgPair[1]
+			pairInfo[count, 3] = score
+			count += 1
 		if count % 500 == 499 : 
 			print count 
 

@@ -2,50 +2,68 @@
 Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning"
 
 ## Table of Content
-* [Dependency](#dependency)
-* [Dataset](#dataset)
-	* [Brueghel](#brueghel)
-	* [Large Time Lags Location(Ltll)](#large-time-lags-location(ltll))
-* [Feature Learning](#feature-learning)
-	* [Visualize Training Data](visualize-training-data)
-	* [Train](visualize-training-data)
-	* [Pretrained Model](pretrained-model)
-
+* [Installation](#installation)
 * [Single Shot Detection](#single-shot-detection)
+* [Feature Learning](#feature-learning)
 * [Discovery](#discovery)
-	* [Pair Discovery](#pair-discovery)
 
-## Dependency
-The code can be used in **Linux** system with the below dependencies:
-* Python 2.7
-* [Pytorch 0.3.0.post4](https://pytorch.org/get-started/previous-versions/)
-* torchvision
-* Other dependencies: [tqdm](https://github.com/tqdm/tqdm), [ujson](https://pypi.org/project/ujson/)
+## Installation
+
+### Dependencies
+
+The code can be used in **Linux** system with the the following dependencies: Python 2.7, Pytorch 0.3.0.post4, torchvision, tqdm, ujson, cv2, scipy
+We recommend to utilize virtual environment to install all dependencies and test the code. One choice is [virtualenv](https://virtualenv.pypa.io/en/latest/). 
+
+To install pytorch 0.3.0.post4 + cuda 8.0 (For other cuda version (9.0, 7.5), the only modification is to change *cu80* to your cuda version):
+``` Bash
+pip install https://download.pytorch.org/whl/cu80/torch-0.3.0.post4-cp27-cp27mu-linux_x86_64.whl
+```
+
+To install other dependencies:
+``` Bash
+bash requirement.sh
+```
+
+
+
  
-## Dataset
+### Dataset
 
-### Brughel
-The whole Brueghel dataset contains **1587** images : 
-* Image can be downloaded via 
+#### Brughel
+The whole Brueghel dataset contains **1587** images, to download the dataset: 
 ``` Bash
 cd data
 bash download_brueghel.sh
 ```
-* Validatation / Test annotations are available in *./data/brueghelVal.json* and *./data/brueghelTest.json*
+Validatation / Test annotations are available in *./data/brueghelVal.json* and *./data/brueghelTest.json*
 
-### Large Time Lags Location(Ltll)
+#### Large Time Lags Location(Ltll)
 
 The official site of Ltll is [here](http://users.cecs.anu.edu.au/~basura/beeldcanon/).
 
 We provide a fast download : 
-* Image can be downloaded via 
 ``` Bash
 cd data
 bash download_ltll.sh
 ```
-* Annotations are available in the dictionary *./data/ltll.json*, Validatation / Test are splitted by the key 'val' and 'test' in the dictionary. 
+Annotations are available in the dictionary *./data/ltll.json*, Validatation / Test are splitted by the key 'val' and 'test' in the dictionary. 
+
+### Pretrained models
+
+To download pretrained models : 
+``` Bash
+cd model
+bash download_models.sh
+```
 
 
+## Single Shot Detection
+
+To test performance on single shot detection, please refer to : 
+``` Bash
+cd single_shot_detection
+python retrieval.py --help
+```
 
 ## Feature Learning
 
@@ -94,14 +112,7 @@ cd feature_learning/
 python train.py --help
 ```
 
-## Single Shot Detection
 
-We also release our single shot detection code in [single_shot_detection directory](https://github.com/XiSHEN0220/ArtMiner/tree/master/single_shot_detection)
-To utilize it, please refer to : 
-``` Bash
-cd single_shot_detection
-python retrieval.py --help
-```
 
 ## Discovery
 
