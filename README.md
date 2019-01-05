@@ -52,6 +52,12 @@ bash run_FeatImageNet.sh # ImageNet feature
 bash run_FeatBrueghel.sh # Brueghel feature
 ```
 
+You should obtain the results in the table 1, 
+| Feature | Cosine Similarity |
+| ------ | ------ |
+| ImageNet | 58.0 |
+| Ours (trained on Brueghel) | 75.3 |
+
 ## Feature Learning
 
 ### Visualize Training Data
