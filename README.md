@@ -61,11 +61,8 @@ You should obtain the results in the table 1,
 
 The visual results will be saved into visualDir that you indicate, some examples are shown below:
 
-|:---:|:---:|:---:|:---:|:---:|:---:|
 | | Query | Rank 1st | Rank 2nd | Rank 3rd | Rank 4th |
-
 |ImageNet|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/00.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/11.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/22.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/33.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/44.jpg) |
-
 |Ours|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/0.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/1.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/2.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/3.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/4.jpg) |
 
 
