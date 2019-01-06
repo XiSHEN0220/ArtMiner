@@ -234,7 +234,7 @@ def VotePair(searchDir, imgList, topkImg, topkScale, topkW, topkH, transform, ne
 	score = torch.sum(mask)
 	return queryIndex, imgPair, score
 
-'''
+
 def TrainPair(nbPairTotal, searchDir, imgList, topkImg, topkScale, topkW, topkH, transform, net, margin, useGpu, featChannel, searchRegion, validRegion, nbImgEpoch, minNet, strideNet) :
 
 	pairInfo = torch.zeros((nbPairTotal, 4)).cuda() if useGpu else torch.zeros((nbPairTotal, 4)) # query_index, pair1, pair2, score
@@ -276,7 +276,7 @@ def TrainPair(searchDir, imgList, topkImg, topkScale, topkW, topkH, transform, n
 	score_sort, score_sort_index = pairInfo[:, 3].sort(descending=True)
 	pairInfo = pairInfo[score_sort_index]
 	return pairInfo[:nbImgEpoch], pairInfo[-nbImgEpoch:]
-
+'''
 
 
 ## Process training pairs, sampleIndex dimension: iterEpoch * batchSize
