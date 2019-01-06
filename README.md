@@ -13,7 +13,7 @@ Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections 
 
 The code can be used in **Linux** system with the the following dependencies: Python 2.7, Pytorch 0.3.0.post4, torchvision, tqdm, ujson, cv2, scipy
 
-We recommend to utilize virtual environment to install all dependencies and test the code. One choice is [virtualenv](https://virtualenv.pypa.io/en/latest/). 
+We recommend to utilize virtual environment to install all dependencies and test the code. One choice is [virtualenv](https://virtualenv.pypa.io/en/latest/).
 
 To install pytorch 0.3.0.post4 + cuda 8.0 (For other cuda version (9.0, 7.5), the only modification is to change *cu80* to your cuda version):
 ``` Bash
@@ -27,16 +27,16 @@ bash requirement.sh
 
 
 
- 
+
 ### Dataset and Model
 
-To download datasets (Brueghel + Ltll) : 
+To download datasets (Brueghel + Ltll) :
 ``` Bash
 cd data
 bash download_dataset.sh
 ```
 
-To download pretrained model : 
+To download pretrained model :
 ``` Bash
 cd model
 bash download_models.sh
@@ -52,19 +52,27 @@ bash run_FeatImageNet.sh # ImageNet feature
 bash run_FeatBrueghel.sh # Brueghel feature
 ```
 
-You should obtain the results in the table 1, 
+You should obtain the results in the table 1,
 
 | Feature | Cosine Similarity |
 | :------: | :------: |
 | ImageNet | 58.0 |
 | Ours (trained on Brueghel) | 75.3 |
 
+The visual results will be saved into visualDir that you indicate, some examples are shown below:
+
+| | Query | Rank 1st | Rank 2nd | Rank 3rd | Rank 4th |  
+|ImageNet|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/00.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/11.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/22.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/33.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/44.png) |
+|Ours|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/0.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/1.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/2.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/3.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/4.png) |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+
+
 ## Feature Learning
 
 ### Visualize Training Data
-It is highly recommended to visualize the training data before the training. 
+It is highly recommended to visualize the training data before the training.
 
-Please refer to 
+Please refer to
 ``` Bash
 cd feature_learning/visualzation/
 python visualize.py --help
@@ -80,7 +88,7 @@ The examples saved into the output directory are shown below. <b>Red</b> / <b>Bl
 | Ltll Image 1 | Ltll Image 2 |
 
 
-We also provide a script generating html table to visualize all pairs. 
+We also provide a script generating html table to visualize all pairs.
 
 Please refer to:
 ``` Bash
@@ -88,12 +96,12 @@ cd feature_learning/visualzation/
 python file2web.py --imgDir IMAGE_DIRECTORY_HERE --outHtml OUTPUT_HTML_HERE
 ```
 ### Train
-To train on Brueghel dataset : 
+To train on Brueghel dataset :
 ``` Bash
 cd feature_learning/
 bash brughel.sh
 ```
-To train on LTLL dataset : 
+To train on LTLL dataset :
 ``` Bash
 cd feature_learning/
 bash ltll.sh
@@ -110,24 +118,17 @@ python train.py --help
 
 ## Discovery
 
-### Pair Discovery 
+### Pair Discovery
 
-To launch discovery between a pair of images, please utilize the script in *discovery/pair_discovery.py*. 
+To launch discovery between a pair of images, please utilize the script in *discovery/pair_discovery.py*.
 One example of command is in *discovery/pair_discovery.sh* :
 ``` Bash
 cd discovery
 bash pair_discovery.sh
 ```
 
-The results of discovery between the pair of images : 
+The results of discovery between the pair of images :
 
 |![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/toto1.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/toto2.png)|
 |:---:|:---:|
 | Discovery Image 1 | Discovery Image 2 |
-
-
-
-
-
-
-
