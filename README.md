@@ -63,9 +63,9 @@ The visual results will be saved into visualDir that you indicate, some examples
 
 | | Query | Rank 1st | Rank 2nd | Rank 3rd | Rank 4th |
 |:---:|:---:|:---:|:---:|:---:|:---:|  
-|ImageNet|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/00.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/11.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/22.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/33.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/44.png) |
+|ImageNet|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/00.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/11.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/22.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/33.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/44.jpg) |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-|Ours|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/0.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/1.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/2.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/3.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/4.png) |
+|Ours|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/0.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/1.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/2.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/3.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/ssd/4.jpg) |
 |:---:|:---:|:---:|:---:|:---:|:---:|
 
 
