@@ -59,7 +59,7 @@ You should obtain the results in the table 1,
 | ImageNet | 58.0 |
 | Ours (trained on Brueghel) | 75.3 |
 
-The visual results will be saved into visualDir that you indicate, some examples are shown below:
+The visual results will be saved into the visualDir that you indicate, some examples are shown below:
 
 | | Query | Rank 1st | Rank 2nd | Rank 3rd | Rank 4th |
 | --- | --- | --- | --- | --- | --- |
