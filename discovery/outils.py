@@ -6,7 +6,7 @@ from scipy.signal import convolve2d
 
 
 ## resize the image to the indicated scale
-def ResizeIim(featMax, featMin, strideNet, w, h) :
+def ResizeImg(featMax, featMin, minNet, strideNet, w, h) :
 
 	ratio = float(w)/h
 	if ratio < 1 : 
@@ -16,8 +16,8 @@ def ResizeIim(featMax, featMin, strideNet, w, h) :
 	else : 
 		featW = featMax 
 		featH = max(round(featW/ratio), featMin )
-	resizeW = featW * strideNet
-	resizeH = featH * strideNet
+	resizeW = (featW - 1) * strideNet + minNet
+	resizeH = (featH - 1) * strideNet + minNet
 
 	return int(resizeW), int(resizeH), float(resizeW)/w, float(resizeH)/h
 	
@@ -40,11 +40,11 @@ def SaliencyCoef(feat) :
 	
 	return saliency_coef.unsqueeze(0).unsqueeze(0)
 	
-def FeatImgRef(I, scaleImgRef, strideNet, margin, transform, model, featChannel, computeSaliencyCoef) : 
+def FeatImgRef(I, scaleImgRef, minNet, strideNet, margin, transform, model, featChannel, computeSaliencyCoef) : 
 
 	# Resize image
 	pilImgW, pilImgH = I.size
-	resizeW, resizeH, wRatio, hRatio =  ResizeIim(scaleImgRef, 2 * margin + 1, strideNet, pilImgW, pilImgH)
+	resizeW, resizeH, wRatio, hRatio =  ResizeImg(scaleImgRef, 2 * margin + 1, minNet, strideNet, pilImgW, pilImgH)
 	pilImg = I.resize((resizeW, resizeH))
 	
 	## Image feature
@@ -67,14 +67,14 @@ def FeatImgRef(I, scaleImgRef, strideNet, margin, transform, model, featChannel,
 	
 	return feat, pilImgW, pilImgH, featW, featH, listW, listH, imgBbox
 	
-def imgFeat(strideNet, I, model, transform, scale) : 
+def imgFeat(minNet, strideNet, I, model, transform, scale) : 
 	w,h = I.size
-	new_w, new_h, _, _ = ResizeIim(scale, 1, strideNet, w, h)
+	new_w, new_h, _, _ = ResizeImg(scale, 1, minNet, strideNet, w, h)
 	Ifeat = Variable(transform(I.resize((new_w, new_h))).unsqueeze(0).cuda(), volatile=True) 
 	Ifeat = model(Ifeat)
 	return Ifeat
 	
-def MatchPair(strideNet, model, transform, scales, feat1, feat1W, feat1H, I2, listW, listH, featChannel, tolerance, vote):
+def MatchPair(minNet, strideNet, model, transform, scales, feat1, feat1W, feat1H, I2, listW, listH, featChannel, tolerance, vote):
 
 	match1 = []
 	match2 = []
@@ -85,7 +85,7 @@ def MatchPair(strideNet, model, transform, scales, feat1, feat1W, feat1H, I2, li
 	
 	for i in range(len(scales)) : 
 		# Normalized I2 feature
-		tmp_I2 = imgFeat(strideNet, I2, model, transform, scales[i])
+		tmp_I2 = imgFeat(minNet, strideNet, I2, model, transform, scales[i])
 		tmp_I2 = tmp_I2.data
 		tmp_norm = torch.sum(tmp_I2 ** 2, dim = 1, keepdim=True) ** 0.5 + 1e-7
 		tmp_I2 = tmp_I2 / tmp_norm.expand(tmp_I2.size())

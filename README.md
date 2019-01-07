@@ -129,6 +129,9 @@ bash pair_discovery.sh
 
 The results of discovery between the pair of images :
 
-|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/toto1.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/toto2.png)|
+|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/FeatImageNet1.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/FeatImageNet2.png)|
 |:---:|:---:|
-| Discovery Image 1 | Discovery Image 2 |
+| Discovery Image 1 with ImageNet Feature| Discovery Image 2 ImageNet Feature|
+|![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/FeatBrueghel1.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/FeatBrueghel2.png)|
+| Discovery Image 1 with Brueghel Feature| Discovery Image 2 Brueghel Feature|
+

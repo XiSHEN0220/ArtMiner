@@ -62,18 +62,20 @@ def PairDiscovery(img1Path, img2Path, model, transform, tolerance, minFeatCC, ma
 	print msg
 	
 	strideNet = 16
+	minNet = 15
+	
 	featChannel = 256 
 	
 	
 	vote = outils.VoteMatrix(tolerance)
 	
 	I1 = Image.open(img1Path).convert('RGB')
-	feat1, pilImg1W, pilImg1H, feat1W, feat1H, list1W, list1H, img1Bbox  = outils.FeatImgRef(I1, scaleImgRef, strideNet, margin, transform, model, featChannel, computeSaliencyCoef)
+	feat1, pilImg1W, pilImg1H, feat1W, feat1H, list1W, list1H, img1Bbox  = outils.FeatImgRef(I1, scaleImgRef, minNet, strideNet, margin, transform, model, featChannel, computeSaliencyCoef)
 	toleranceRef = tolerance / scaleImgRef
 	I2 = Image.open(img2Path).convert('RGB')
 	pilImg2W, pilImg2H = I2.size
 	
-	match1, match2, similarity, matchSetT = outils.MatchPair(strideNet, model, transform, scaleList, feat1, feat1W, feat1H, I2, list1W, list1H, featChannel, tolerance, vote)
+	match1, match2, similarity, matchSetT = outils.MatchPair(minNet, strideNet, model, transform, scaleList, feat1, feat1W, feat1H, I2, list1W, list1H, featChannel, tolerance, vote)
 	matchSetT = matchSetT if houghInitial else range(len(match1)) 
 	
 	if len(matchSetT) < nbSamplePoint  : 
@@ -174,14 +176,13 @@ if __name__ == '__main__':
 	parser.add_argument(
 		'--nbOctave', type=int, default= 2, help='# of octaves')
 
-
 	##---- Model Setting ----####
 
 	parser.add_argument(
 		'--imagenetFeatPath', type=str, default='../model/resnet18.pth', help='imageNet feature net weight path')
 
 	parser.add_argument(
-		'--finetunePath', type=str, default='../model/brueghelModel.pth', help='finetune net weight path')
+		'--finetunePath', type=str, help='finetune net weight path')
 
 	parser.add_argument(
 		'--searchDir', type=str, default= '../data/Brueghel/', help='searching directory')

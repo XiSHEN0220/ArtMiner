@@ -1,1 +1,3 @@
-python pair_discovery.py --cuda --tolerance 2. --scaleImgRef 40 --houghInitial --img1Path ../data/Brueghel/Flowers\ in\ a\ Tazza\ \(Netherlands\).jpg --img2Path ../data/Brueghel/Flowers\ in\ Basket\ and\ Tazza\ \(Hartford\).jpg --out1 toto1.png --out2 toto2.png
+python pair_discovery.py --cuda --tolerance 2. --scaleImgRef 40 --houghInitial --img1Path ../data/Brueghel/Entrance\ to\ a\ Village\ with\ a\ Windmill.jpg --img2Path ../data/Brueghel/Entrance\ to\ Village\ with\ Windmill\ \(Amsterdam\).jpg --out1 FeatImageNet1.png --out2 FeatImageNet2.png
+
+python pair_discovery.py --cuda --tolerance 2. --scaleImgRef 40 --houghInitial --img1Path ../data/Brueghel/Entrance\ to\ a\ Village\ with\ a\ Windmill.jpg --img2Path ../data/Brueghel/Entrance\ to\ Village\ with\ Windmill\ \(Amsterdam\).jpg --out1 FeatImageNet1.png --out1 FeatBrueghel1.png --out2 FeatBrueghel2.png --finetunePath ../model/brueghelModel.pth
