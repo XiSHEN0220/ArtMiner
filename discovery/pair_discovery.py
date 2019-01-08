@@ -56,10 +56,11 @@ def BlurMask(mask) :
 	
 	
 
-def PairDiscovery(img1Path, img2Path, model, transform, tolerance, minFeatCC, margin, scaleImgRef, scaleList, houghInitial, nbSamplePoint, nbIter, saveQuality, computeSaliencyCoef, out1, out2) : 
+def PairDiscovery(img1Path, img2Path, model, transform, tolerance, minFeatCC, margin, scaleImgRef, scaleList, houghInitial, nbSamplePoint, nbIter, saveQuality, computeSaliencyCoef, out1, out2, printMsg = True) : 
 	
 	msg = 'discovery between : {} and {}'.format(img1Path, img2Path)
-	print msg
+	if printMsg : 
+		print msg
 	
 	strideNet = 16
 	minNet = 15
@@ -79,19 +80,22 @@ def PairDiscovery(img1Path, img2Path, model, transform, tolerance, minFeatCC, ma
 	matchSetT = matchSetT if houghInitial else range(len(match1)) 
 	
 	if len(matchSetT) < nbSamplePoint  : 
-		SkipIteration(I1, I2, saveQuality, out1, out2)
-		return
+		if out1 : 
+			SkipIteration(I1, I2, saveQuality, out1, out2)
+		return 0.
 	
 	bestParams, bestScore, inlier = outils.RANSAC(nbIter, match1, match2, matchSetT, similarity, toleranceRef, nbSamplePoint)
 	
 	if len(bestParams) == 0 :
-		SkipIteration(I1, I2, saveQuality, index)
+		if out1 :
+			SkipIteration(I1, I2, saveQuality, index)
 		return 0.
 	
 	feat2W, feat2H = outils.FeatSizeImgTarget(bestParams, feat1W, feat1H)
 	
 	if feat2W == 0 or feat2H == 0 or feat2W >= 1000 or feat2H >= 1000: 
-		SkipIteration(I1, I2, saveQuality, out1, out2)
+		if out1 :
+			SkipIteration(I1, I2, saveQuality, out1, out2)
 		return 0.
 	
 	match1, match2, score = outils.BackwardVerification(feat2W, feat2H, feat1W, feat1H, inlier)
@@ -105,58 +109,61 @@ def PairDiscovery(img1Path, img2Path, model, transform, tolerance, minFeatCC, ma
 	
 	match1, match2, score = outils.KeepOnlyLargeCC(match1, match2, mask1, mask2, minFeatCC, score)
 	if len(match1) == 0 :
-		SkipIteration(I1, I2, saveQuality, out1, out2)
+		if out1 :
+			SkipIteration(I1, I2, saveQuality, out1, out2)
 		return 0.
 		
 	_, score = outils.GetCC(match1, match2, mask1, mask2, score)
 	sumScore = np.sum(score)
+	finalScore = sumScore/float(feat1.size()[1]) 
 	
-	match1, match2 = np.array(outils.ExtendRemove(match1)), np.array(outils.ExtendRemove(match2))
+	if out1 : 
+		match1, match2 = np.array(outils.ExtendRemove(match1)), np.array(outils.ExtendRemove(match2))
 	
-	mask1[match1[:, 0], match1[:, 1]] = 1
-	mask2[match2[:, 0], match2[:, 1]] = 1
+		mask1[match1[:, 0], match1[:, 1]] = 1
+		mask2[match2[:, 0], match2[:, 1]] = 1
 
 
 
-	mask1 = imresize(mask1, (finalMask1.shape[0], finalMask1.shape[1])) / 128 > 0
-	mask2 = imresize(mask2, (finalMask2.shape[0], finalMask2.shape[1])) / 128 > 0
+		mask1 = imresize(mask1, (finalMask1.shape[0], finalMask1.shape[1])) / 128 > 0
+		mask2 = imresize(mask2, (finalMask2.shape[0], finalMask2.shape[1])) / 128 > 0
 	
 	
-	finalMask1[mask1 ] = 255
-	finalMask2[mask2 ] = 255
+		finalMask1[mask1 ] = 255
+		finalMask2[mask2 ] = 255
 	
-	finalScore = sumScore/float(feat1.size()[1])  
+		 
 	
 
 	
-	I1RGBA = cv2.cvtColor(np.array(I1), cv2.COLOR_RGBA2BGRA)
-	I2RGBA = cv2.cvtColor(np.array(I2), cv2.COLOR_RGBA2BGRA)
+		I1RGBA = cv2.cvtColor(np.array(I1), cv2.COLOR_RGBA2BGRA)
+		I2RGBA = cv2.cvtColor(np.array(I2), cv2.COLOR_RGBA2BGRA)
 
 	
-	mask1Index = finalMask1 > 0
-	mask2Index =  finalMask2 > 0
+		mask1Index = finalMask1 > 0
+		mask2Index =  finalMask2 > 0
 	
-	mask1 = np.ones((I1RGBA.shape[0], I1RGBA.shape[1])) * 100
-	mask1[img1Bbox[1] : img1Bbox[3], img1Bbox[0] : img1Bbox[2]] = finalMask1
-	mask2 = finalMask2
+		mask1 = np.ones((I1RGBA.shape[0], I1RGBA.shape[1])) * 100
+		mask1[img1Bbox[1] : img1Bbox[3], img1Bbox[0] : img1Bbox[2]] = finalMask1
+		mask2 = finalMask2
 	
-	mask1, mask2 = mask1.astype(np.uint8), mask2.astype(np.uint8)
-	I1RGBA[:, :,3] = mask1
-	I2RGBA[:, :,3] = mask2
-	
-	
-	ratio1 = max(max(I1RGBA.shape[0], I1RGBA.shape[1]) / float(saveQuality), 1)
-	I1RGBA =imresize(I1RGBA, (int(I1RGBA.shape[0] / ratio1), int(I1RGBA.shape[1] / ratio1)))
-	
-	ratio2 = max(I2RGBA.shape[0], I2RGBA.shape[1]) / float(saveQuality)
-	I2RGBA =imresize(I2RGBA, (int(I2RGBA.shape[0] / ratio2), int(I2RGBA.shape[1] / ratio2)))
-	
-	I1RGBA[:, :, 3] = BlurMask(I1RGBA[:, :, 3]).astype(np.uint8)
-	I2RGBA[:, :, 3] = BlurMask(I2RGBA[:, :, 3]).astype(np.uint8)
+		mask1, mask2 = mask1.astype(np.uint8), mask2.astype(np.uint8)
+		I1RGBA[:, :,3] = mask1
+		I2RGBA[:, :,3] = mask2
 	
 	
-	cv2.imwrite(out1, I1RGBA)
-	cv2.imwrite(out2, I2RGBA)
+		ratio1 = max(max(I1RGBA.shape[0], I1RGBA.shape[1]) / float(saveQuality), 1)
+		I1RGBA =imresize(I1RGBA, (int(I1RGBA.shape[0] / ratio1), int(I1RGBA.shape[1] / ratio1)))
+	
+		ratio2 = max(I2RGBA.shape[0], I2RGBA.shape[1]) / float(saveQuality)
+		I2RGBA =imresize(I2RGBA, (int(I2RGBA.shape[0] / ratio2), int(I2RGBA.shape[1] / ratio2)))
+	
+		I1RGBA[:, :, 3] = BlurMask(I1RGBA[:, :, 3]).astype(np.uint8)
+		I2RGBA[:, :, 3] = BlurMask(I2RGBA[:, :, 3]).astype(np.uint8)
+	
+	
+		cv2.imwrite(out1, I1RGBA)
+		cv2.imwrite(out2, I2RGBA)
 	
 	return finalScore
 	
@@ -183,9 +190,6 @@ if __name__ == '__main__':
 
 	parser.add_argument(
 		'--finetunePath', type=str, help='finetune net weight path')
-
-	parser.add_argument(
-		'--searchDir', type=str, default= '../data/Brueghel/', help='searching directory')
 
 	parser.add_argument(
 		'--margin', type=int, default= 3, help='margin, the feature describing the border part is not taken into account')
