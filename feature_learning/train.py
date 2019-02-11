@@ -26,10 +26,10 @@ parser.add_argument(
 ##---- Loss Parameter ----####
 
 parser.add_argument(
-	'--tripleLossThreshold', type=float , default = 0.6, help='threshold for triple loss')
+	'--tripleLossThreshold', type=float , default = 0.8, help='threshold for triple loss')
 
 parser.add_argument(
-	'--topKLoss', type=int, default= 20, help='topk loss as negative loss')
+	'--topKLoss', type=int, default= 10, help='topk loss as negative loss')
 
 ##---- Search, Train, Validate Region ----####
 
@@ -43,10 +43,6 @@ parser.add_argument(
 	'--validRegion', type=int, default= 10, help='validation region')
 
 ##---- Training parameters ----####
-
-parser.add_argument(
-	'--imagenetFeatPath', type=str, default='../model/resnet18.pth', help='imageNet feature model weight path')
-
 parser.add_argument(
 	'--finetunePath', type=str, help='finetune model weight path')
 
@@ -57,7 +53,7 @@ parser.add_argument(
 	'--margin', type=int, default= 5, help='margin, the feature describing the border part is not taken into account')
 
 parser.add_argument(
-	'--nbEpoch', type=int , default = 600, help='Number of training epochs')
+	'--nbEpoch', type=int , default = 300, help='Number of training epochs')
 
 parser.add_argument(
 	'--lr', type=float , default = 1e-5, help='learning rate')
@@ -112,7 +108,7 @@ transform = transforms.Compose([
 strideNet = 16
 minNet = 15
 featChannel = 256
-net = Model(args.imagenetFeatPath, args.finetunePath)
+net = Model(args.finetunePath)
 if args.cuda:
 	net.cuda()
 optimizer = torch.optim.Adam(net.parameters(), lr=args.lr, betas=(0.5, 0.999))

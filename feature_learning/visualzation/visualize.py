@@ -25,11 +25,11 @@ def BboxFromFeatPos(featW, featH, w, h, posW, posH) :
 
 	return map(int, [left, top, right, bottom])
 
-def DrawImg(searchDir, imgList, topkImg, topkScale, topkW, topkH, queryIndex, pairIndex, strideNet, searchRegion, trainRegion, validRegion, margin, saveSize):
+def DrawImg(searchDir, imgList, topkImg, topkScale, topkW, topkH, queryIndex, pairIndex, minNet, strideNet, searchRegion, trainRegion, validRegion, margin, saveSize):
 
 	I = Image.open(os.path.join(searchDir, imgList[topkImg[queryIndex, pairIndex]])).convert('RGB')
 	w,h = I.size
-	new_w, new_h = outils.resize_dim_image(margin * 2 + searchRegion + 1, topkScale[queryIndex, pairIndex], strideNet, w, h)
+	new_w, new_h = outils.ResizeImg(margin * 2 + searchRegion + 1, topkScale[queryIndex, pairIndex], minNet, strideNet, w, h)
 	featW, featH = new_h / float(strideNet), new_w /  float(strideNet) ## Dimension are inverse in PIL Image and tensor feature
 	drw = ImageDraw.Draw(I, 'RGBA')
 
@@ -39,14 +39,14 @@ def DrawImg(searchDir, imgList, topkImg, topkScale, topkW, topkH, queryIndex, pa
 		drw.rectangle(xy = bbox, fill=(255, 0, 0, 125), outline=None)
 
 	## Valid region, Blue Color
-	validPosW, validPosH = topkW[queryIndex, pairIndex] - validRegion / 2 + 1, topkH[queryIndex, pairIndex] - validRegion / 2 + 1
+	validPosW, validPosH = topkW[queryIndex, pairIndex] - (validRegion + 1) / 2 + 1, topkH[queryIndex, pairIndex] - (validRegion + 1) / 2 + 1
 	for i,j in product(range(validRegion), range(validRegion)) :
 		if i == 0 or i == validRegion - 1 or j == 0 or j == validRegion - 1 :
 			bbox = BboxFromFeatPos(featW, featH, w, h, validPosW + i, validPosH + j)
 			drw.rectangle(xy = bbox, fill=(0, 0, 255, 125), outline=None)
 
 	## Train region, Green Color
-	trainPosW, trainPosH = topkW[queryIndex, pairIndex] - trainRegion / 2 + 1, topkH[queryIndex, pairIndex] - trainRegion / 2 + 1
+	trainPosW, trainPosH = topkW[queryIndex, pairIndex] - (trainRegion + 1) / 2 + 1, topkH[queryIndex, pairIndex] - (trainRegion + 1) / 2 + 1
 	bbox = BboxFromFeatPos(featW, featH, w, h, trainPosW, trainPosH)
 	drw.rectangle(xy = bbox, fill=(0, 255, 0, 125), outline=None)
 	bbox = BboxFromFeatPos(featW, featH, w, h, trainPosW, trainPosH + trainRegion - 1)
@@ -60,15 +60,15 @@ def DrawImg(searchDir, imgList, topkImg, topkScale, topkW, topkH, queryIndex, pa
 	I.resize((saveW, saveH))
 	return I
 
-def Visualize(outDir, sample, searchRegion, trainRegion, validRegion, searchDir, imgList, topkImg, topkScale, topkW, topkH, saveSize, margin):
+def Visualize(outDir, sample, searchRegion, trainRegion, validRegion, searchDir, imgList, topkImg, topkScale, topkW, topkH, saveSize, margin, minNet, strideNet):
 	nbSample = len(sample)
 	for i in tqdm(range(nbSample)) :
 		pair = sample[i]
 		queryIndex = int(pair[0])
 		pairIndex = [int(pair[1]), int(pair[2])]
 
-		I1 = DrawImg(searchDir, imgList, topkImg, topkScale, topkW, topkH, queryIndex, pairIndex[0], strideNet, searchRegion, trainRegion, validRegion, margin, saveSize)
-		I2 = DrawImg(searchDir, imgList, topkImg, topkScale, topkW, topkH, queryIndex, pairIndex[1], strideNet, searchRegion, trainRegion, validRegion, margin, saveSize)
+		I1 = DrawImg(searchDir, imgList, topkImg, topkScale, topkW, topkH, queryIndex, pairIndex[0], minNet, strideNet, searchRegion, trainRegion, validRegion, margin, saveSize)
+		I2 = DrawImg(searchDir, imgList, topkImg, topkScale, topkW, topkH, queryIndex, pairIndex[1], minNet, strideNet, searchRegion, trainRegion, validRegion, margin, saveSize)
 
 		out1, out2 = os.path.join(outDir, 'Rank{:d}_1.jpg'.format(i)), os.path.join(outDir, 'Rank{:d}_2.jpg'.format(i))
 		I1.save(out1)
@@ -87,21 +87,17 @@ parser.add_argument(
 	'--searchRegion', type=int, default=2, help='feat size')
 
 parser.add_argument(
-	'--trainRegion', type=int, choices=[2, 4, 6, 8, 10, 12, 14], default = 12, help='train region, 2, 4, 6, 8, 10, 12, 14')
+	'--trainRegion', type=int, default = 12, help='train region, 2, 4, 6, 8, 10, 12, 14')
 
 parser.add_argument(
 	'--validRegion', type=int, default= 10, help='validation region')
 
 ##---- Training parameters ----####
-
-parser.add_argument(
-	'--imagenetFeatPath', type=str, default='../../../pre-trained-models/resnet18.pth', help='imageNet feature model weight path')
-
 parser.add_argument(
 	'--modelPath', type=str, help='model weight path')
 
 parser.add_argument(
-	'--searchDir', type=str, default= '../data/Brueghel/', help='searching directory')
+	'--searchDir', type=str, default= '../../data/Brueghel/', help='searching directory')
 
 parser.add_argument(
 	'--margin', type=int, default= 5, help='margin, the feature describing the border part is not taken into account')
@@ -127,6 +123,8 @@ parser.add_argument(
 parser.add_argument(
 	'--scalePerOctave', type=int, default = 3, help='number of scales / octave')
 
+parser.add_argument(
+	'--queryScale', type=int, nargs='+', default = [68, 60, 49, 40, 36], help='query image scale')
 
 args = parser.parse_args()
 tqdm.monitor_interval = 0
@@ -150,15 +148,16 @@ transform = transforms.Compose([
 
 ## Model Initialize
 strideNet = 16
+minNet = 15
 featChannel = 256
-net = Model(args.imagenetFeatPath, args.modelPath)
+net = Model(args.modelPath)
 if args.cuda:
 	net.cuda()
 
 
 ## Scales
 
-scales = outils.get_scales(args.featScaleBase, args.nbOctave, args.scalePerOctave)
+scales = outils.ScaleList(args.featScaleBase, args.nbOctave, args.scalePerOctave)
 msg = 'We search to match in {:d} scales, the max dimensions in the feature maps are:'.format(len(scales))
 print msg
 print scales
@@ -179,13 +178,14 @@ else :
 	index = np.random.permutation(np.arange(len(imgList)))[:args.nbSearchImgEpoch]
 	searchImgList = [imgList[i] for i in index]
 		
-featQuery = outils.RandomQueryFeat(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, strideNet, transform, net, args.searchDir, args.margin, searchImgList, args.cuda)
+featQuery = outils.RandomQueryFeat(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, minNet, strideNet, transform, net, args.searchDir, args.margin, searchImgList, args.cuda, args.queryScale)
 
 print '---> Get top10 patches matching to query...'
-topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, searchImgList, args.searchDir, args.margin, args.searchRegion, scales, strideNet, transform, net, featQuery, args.cuda)
+topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, searchImgList, args.searchDir, args.margin, args.searchRegion, scales, minNet, strideNet, transform, net, featQuery, args.cuda)
+
 
 print '---> Get training pairs...'
-posPair, _ = outils.TrainPair(nbPatchTotal, args.searchDir, searchImgList, topkImg, topkScale, topkW, topkH, transform, net, args.margin, args.cuda, featChannel, args.searchRegion, args.validRegion, args.nbImgEpoch, strideNet)
+posPair, _ = outils.TrainPair(nbPatchTotal, args.searchDir, searchImgList, topkImg, topkScale, topkW, topkH, transform, net, args.margin, args.cuda, featChannel, args.searchRegion, args.validRegion, args.nbImgEpoch, minNet, strideNet)
 
 
-Visualize(args.outDir, posPair, args.searchRegion, args.trainRegion, args.validRegion, args.searchDir, searchImgList, topkImg, topkScale, topkW, topkH, args.saveSize, args.margin)
+Visualize(args.outDir, posPair, args.searchRegion, args.trainRegion, args.validRegion, args.searchDir, searchImgList, topkImg, topkScale, topkW, topkH, args.saveSize, args.margin, minNet, strideNet)

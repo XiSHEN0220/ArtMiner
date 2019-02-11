@@ -26,10 +26,6 @@ parser.add_argument(
 	'--nbOctave', type=int, default= 2, help='# of octaves')
 
 ##---- Model Setting ----####
-
-parser.add_argument(
-	'--imagenetFeatPath', type=str, default='../model/resnet18.pth', help='imageNet feature net weight path')
-
 parser.add_argument(
 	'--finetunePath', type=str, help='finetune net weight path')
 
@@ -76,7 +72,7 @@ parser.add_argument(
 args = parser.parse_args()
 print args
 	
-net = Model(args.imagenetFeatPath, args.finetunePath)
+net = Model(args.finetunePath)
 net.cuda() ## Not support cpu version
 net.eval()
 
