@@ -86,16 +86,15 @@ class ResNet_layer3_feature(nn.Module):
 	def init_weight(self, init_weight_path) :
 		model_params=torch.load(init_weight_path)
 		for key in model_params.keys() : 
-			if 'layer4' in key : 
+			if 'layer4' in key or 'fc.bias' in key or 'fc.weight' in key : 
+				model_params.pop(key, None)
+			if 'model.' in key : 
+				keyUpdate = key.split('model.')[1]
+				model_params[keyUpdate] = model_params[key]
 				model_params.pop(key, None)
 		
-		model_params.pop('fc.bias', None)
-		model_params.pop('fc.weight', None)
 		self.load_state_dict(model_params)
 		
-		
-	def resume(self, load_model_path) : 
-		self.load_state_dict( torch.load(load_model_path) )
 				
 	def forward(self, x):
 		x = self.conv1(x)
@@ -111,13 +110,12 @@ class ResNet_layer3_feature(nn.Module):
 		
 class Model(nn.Module):
 
-	def __init__(self, init_weight_path, resume_model_path = None):
+	def __init__(self, resume_model_path = None):
 		
 		super(Model, self).__init__()
-		self.model = ResNet_layer3_feature( init_weight_path)  
+		self.model = ResNet_layer3_feature( resume_model_path )  
 		if resume_model_path :
 			print 'Loading weight from {}'.format(resume_model_path) 
-			self.load_state_dict(torch.load(resume_model_path))
 				
 	def forward(self, x):
 		x = self.model(x)
