@@ -72,10 +72,10 @@ The visual results will be saved into the visualDir that you indicate, some exam
 ### Visualize Training Data
 It is highly recommended to visualize the training data before the training.
 
-Please refer to
+One example is can be ran with : 
 ``` Bash
 cd feature_learning/visualzation/
-python visualize.py --help
+bash visBrueghelLtllOxford.sh
 ```
 The examples saved into the output directory are shown below. <b>Red</b> / <b>Blue</b> / <b>Green</b> region indicates <b>Search</b> / <b>Validate</b> / <b>Train</b> region.
 
@@ -88,23 +88,13 @@ The examples saved into the output directory are shown below. <b>Red</b> / <b>Bl
 | Ltll Image 1 | Ltll Image 2 |
 
 
-We also provide a script generating html table to visualize all pairs.
-
-Please refer to:
-``` Bash
-cd feature_learning/visualzation/
-python file2web.py --imgDir IMAGE_DIRECTORY_HERE --outHtml OUTPUT_HTML_HERE
-```
 ### Train
-To train on Brueghel dataset :
+To train on Brueghel / Ltll / Oxford dataset :
 ``` Bash
 cd feature_learning/
-bash brughel.sh
-```
-To train on LTLL dataset :
-``` Bash
-cd feature_learning/
+bash brughel.sh 
 bash ltll.sh
+bash oxford.sh
 ```
 
 If you want to launch the training on your own dataset, indicates the image directory in *--searchDir* in *train.py*.
@@ -134,4 +124,18 @@ The results of discovery between the pair of images :
 | Discovery Image 1 with ImageNet Feature| Discovery Image 2 ImageNet Feature|
 |![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/FeatBrueghel1.png) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/discovery/FeatBrueghel2.png)|
 | Discovery Image 1 with Brueghel Feature| Discovery Image 2 Brueghel Feature|
+
+### Ltll
+
+To get classification results on Ltll : 
+``` Bash
+cd discovery
+bash demo_ltll.sh
+```
+
+To get retrieval results on Oxford5K : 
+``` Bash
+cd discovery
+bash demo_oxford.sh
+```
 
