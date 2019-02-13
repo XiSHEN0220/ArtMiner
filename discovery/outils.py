@@ -3,6 +3,7 @@ from skimage import measure
 import torch
 from torch.autograd import Variable
 from scipy.signal import convolve2d
+from itertools import combinations
 
 
 ## resize the image to the indicated scale
@@ -200,11 +201,10 @@ def Prediction(X, Y, H21) :
 	return np.sum((X[:, :2]- estimX[:, :2])**2, axis=1)**0.5
 	
 	
-def ScoreRANSAC(match1, match2, matchSetT, score, tolerance, nbSamplePoint, paramEstimate) : 
+def ScoreRANSAC(match1, match2, matchSetT, sampleIndex, score, tolerance, nbSamplePoint, paramEstimate) : 
 	
 	#All The Data
 	nbMatch = len(matchSetT)
-	sampleIndex = np.random.choice(range(nbMatch), nbSamplePoint, replace=False) 
 	sampleIndex = np.array(matchSetT)[sampleIndex]
 	X = match1[sampleIndex]
 	Y = match2[sampleIndex]
@@ -217,7 +217,8 @@ def ScoreRANSAC(match1, match2, matchSetT, score, tolerance, nbSamplePoint, para
 	
 	for i in range(len(match1)) : 
 		if isInlier[i] : 
-			score_i = score[i]
+			score_i = score[i] * np.exp(-1 * error[i] ** 2 / tolerance ** 2)
+			#score_i = score[i]
 			key = (match1[i][0], match1[i][1])
 			if inlier.has_key(key) and inlier[key][1] < score_i : 
 				inlier[key] = [match2[i], score_i] 
@@ -242,9 +243,14 @@ def RANSAC(nbIter, match1, match2, matchSetT, score, tolerance, nbSamplePoint) :
 	elif nbSamplePoint == 4:
 		paramEstimate = Homography
 		transformation = 'Homography'
-		
-	for i in range(nbIter) : 
-		H21, pairScore, matchSetT = ScoreRANSAC(match1, match2, matchSetT, score, tolerance, nbSamplePoint, paramEstimate)
+	
+	nbMatch = len(matchSetT)
+	nbCombination = int(np.prod([nbMatch - i for i in range(nbSamplePoint)]) / np.prod([i + 1 for i in range(nbSamplePoint)]))	
+	sampleIndexList = np.array(list(combinations(range(nbMatch),nbSamplePoint)))[np.random.choice(np.arange(nbCombination), min(nbCombination, nbIter), replace=False)]
+	
+
+	for i in range(len(sampleIndexList)) : 
+		H21, pairScore, matchSetT = ScoreRANSAC(match1, match2, matchSetT, sampleIndexList[i], score, tolerance, nbSamplePoint, paramEstimate)
 		if pairScore > bestScore : 
 			bestParams = H21
 			bestScore = pairScore

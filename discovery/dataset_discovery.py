@@ -29,7 +29,6 @@ parser.add_argument(
 parser.add_argument(
 	'--finetunePath', type=str, help='finetune net weight path')
 
-
 parser.add_argument(
 	'--margin', type=int, default= 3, help='margin, the feature describing the border part is not taken into account')
 
@@ -99,7 +98,8 @@ for sourceImgName in tqdm(label[args.valOrTest]) :
 		targetImgPath = os.path.join(args.searchDir, targetImgName)
 		score = pair_discovery.PairDiscovery(sourceImgPath, targetImgPath, net, transform, args.tolerance, args.minFeatCC, args.margin, args.scaleImgRef, scaleList, args.houghInitial, args.nbSamplePoint, args.nbIter, args.saveQuality, args.computeSaliencyCoef, None, None, False)
 		res[sourceImgName].append((targetImgName, score))
-
+	#res[sourceImgName] = sorted(res[sourceImgName], key=lambda s: s[1], reverse=True)
+	#print sourceImgName, res[sourceImgName][0]
 with open(args.outResJson, 'w') as f : 
 	ujson.dump(res, f)
 
