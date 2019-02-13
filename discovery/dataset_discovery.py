@@ -69,6 +69,9 @@ parser.add_argument(
 parser.add_argument(
 	'--outResJson', type=str, default = 'res.json', help='output json file to store the results')
 
+parser.add_argument(
+	'--dataset', type=str, default = 'ltll', choices = ['ltll', 'oxford'], help='which dataset, choices between ltll and oxford, by default is ltll')
+
 args = parser.parse_args()
 print args
 	
@@ -96,19 +99,32 @@ for sourceImgName in tqdm(label[args.valOrTest]) :
 		targetImgPath = os.path.join(args.searchDir, targetImgName)
 		score = pair_discovery.PairDiscovery(sourceImgPath, targetImgPath, net, transform, args.tolerance, args.minFeatCC, args.margin, args.scaleImgRef, scaleList, args.houghInitial, args.nbSamplePoint, args.nbIter, args.saveQuality, args.computeSaliencyCoef, None, None, False)
 		res[sourceImgName].append((targetImgName, score))
-	
-nbSourceImg = len(res.keys())
-truePosCount = 0
-for sourceImgName in res.keys() : 
-	res[sourceImgName] = sorted(res[sourceImgName], key=lambda s: s[1], reverse=True)
-	if label['annotation'][sourceImgName] == label['annotation'][res[sourceImgName][0][0]] : 
-		truePosCount += 1
-		
-res['accuracy'] = truePosCount / float(nbSourceImg)
-msg = '***** Final accuracy is {:.3f} *****'.format(res['accuracy'])
-print msg
 
 with open(args.outResJson, 'w') as f : 
 	ujson.dump(res, f)
+
+if args.dataset == 'ltll' : 
+	nbSourceImg = len(res.keys())
+	truePosCount = 0
+	for sourceImgName in res.keys() : 
+		res[sourceImgName] = sorted(res[sourceImgName], key=lambda s: s[1], reverse=True)
+		if label['annotation'][sourceImgName] == label['annotation'][res[sourceImgName][0][0]] : 
+			truePosCount += 1
+		
+	res['accuracy'] = truePosCount / float(nbSourceImg)
+	msg = '***** Final accuracy is {:.3f} *****'.format(res['accuracy'])
+	print msg
+
+elif args.dataset == 'oxford' : 
+	mAPres = []
+	for sourceImgName in res.keys() : 
+		res[sourceImgName] = sorted(res[sourceImgName], key=lambda s: s[1], reverse=True)
+		tmpRes = []
+		for i, item in enumerate(res[sourceImgName]) : 
+			if item[0] in label['annotation'][sourceImgName] :
+				tmpRes.append((len(tmpRes) + 1) / float(i + 1))
+		mAPres.append(np.mean(tmpRes))
+	msg = '***** Final mAP is {:.3f} *****'.format(np.mean(mAPres))
+	print msg
 
 
