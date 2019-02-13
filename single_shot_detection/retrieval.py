@@ -45,9 +45,6 @@ parser.add_argument(
 ##---- Training parameters ----####
 
 parser.add_argument(
-	'--imagenetFeatPath', type=str, default='../model/resnet18.pth', help='imageNet feature net weight path')
-
-parser.add_argument(
 	'--finetunePath', type=str, help='finetune net weight path')
 
 parser.add_argument(
@@ -209,7 +206,7 @@ transform = transforms.Compose([
 strideNet = 16
 minNet = 15
 featChannel = 256
-net = Model(args.imagenetFeatPath, args.finetunePath)
+net = Model(args.finetunePath)
 if args.cuda:
 	net.cuda()
 
