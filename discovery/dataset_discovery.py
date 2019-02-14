@@ -4,6 +4,7 @@ import os
 import sys
 from tqdm import tqdm
 import argparse
+import numpy as np
 
 sys.path.append("..")
 
