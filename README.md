@@ -1,7 +1,7 @@
 # ArtMiner
 Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning"
 
-<center><img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/teaser.png" width="600px" alt="teaser"></center>
+<center><img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/teaser.png" width="400px" alt="teaser"></center>
 
 ## Table of Content
 * [Installation](#installation)
