@@ -1,18 +1,8 @@
-#container {
-	height:100px;
-	line-height:100px;
-}
-
-#container img {
-	vertical-align:middle;
-	max-height:100%;
-}
-
 # ArtMiner
 Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning"
-<div style="text-align: center">
+<p align="center">
 <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/teaser.png" width="400px" alt="teaser">
-</div>
+</p>
 
 ## Table of Content
 * [Installation](#installation)
