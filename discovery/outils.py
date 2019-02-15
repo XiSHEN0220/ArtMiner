@@ -5,7 +5,6 @@ from torch.autograd import Variable
 from scipy.signal import convolve2d
 from itertools import combinations
 
-
 ## resize the image to the indicated scale
 def ResizeImg(featMax, featMin, minNet, strideNet, w, h) :
 
@@ -67,6 +66,42 @@ def FeatImgRef(I, scaleImgRef, minNet, strideNet, margin, transform, model, feat
 	listH = (torch.range(0, featH -1, 1)).unsqueeze(0).expand(featW, featH).contiguous().view(-1).type(torch.LongTensor)
 	
 	return feat, pilImgW, pilImgH, featW, featH, listW, listH, imgBbox
+
+	
+def FeatImgRefBbox(I, scaleImgRef, minNet, strideNet, margin, transform, model, featChannel, computeSaliencyCoef, bb) : 
+
+	# Resize image
+	pilImgW, pilImgH = I.size
+	resizeW, resizeH, wRatio, hRatio =  ResizeImg(scaleImgRef, 2 * margin + 1, minNet, strideNet, bb[2] - bb[0], bb[3] - bb[1])
+	bb0, bb1, bb2, bb3 = bb[0] * wRatio, bb[1] * hRatio, bb[2] * wRatio, bb[3] * hRatio
+	pilImg = I.resize((int(pilImgW * wRatio), int(pilImgH * hRatio)))
+	
+	wLeftMargin = min(int(bb0) / strideNet, margin)
+	hTopMargin = min(int(bb1) / strideNet, margin)
+	wRightMargin = min(int(pilImg.size[0] - bb2) / strideNet, margin)
+	hBottomMargin = min(int(pilImg.size[1] - bb3) / strideNet, margin)
+	pilImg = pilImg.crop( (bb0 - wLeftMargin * strideNet, bb1 - hTopMargin * strideNet, bb2 + wRightMargin * strideNet, bb3 + hBottomMargin * strideNet) )
+	
+			
+	## Image feature
+	feat=transform(pilImg)
+	feat=feat.unsqueeze(0)
+	feat = Variable(feat, volatile=True).cuda() 
+	feat = model.forward(feat).data
+	feat = feat / (1e-7 + (torch.sum(feat **2, dim = 1, keepdim=True).expand(feat.size())**0.5) )
+	featSaliency = SaliencyCoef(feat)
+	feat = feat * (1 - featSaliency.expand(feat.size())) if computeSaliencyCoef else feat
+	feat = feat[:, :, hTopMargin : feat.size()[2] - hBottomMargin, wLeftMargin : feat.size()[3] - wRightMargin ].contiguous()
+	featW, featH = feat.size()[2], feat.size()[3] ## attention : featW and featH correspond to pilImgH and pilImgW respectively 
+	feat = feat.view(featChannel, -1)
+	
+	## Other information
+	bbox = [0, 0, bb2 - bb0, bb3 - bb1]
+	imgBbox = map(int, bbox)
+	listW = (torch.range(0, featW -1, 1)).unsqueeze(1).expand(featW, featH).contiguous().view(-1).type(torch.LongTensor)
+	listH = (torch.range(0, featH -1, 1)).unsqueeze(0).expand(featW, featH).contiguous().view(-1).type(torch.LongTensor)
+	
+	return feat, I, pilImgW, pilImgH, featW, featH, listW, listH, bb
 	
 def imgFeat(minNet, strideNet, I, model, transform, scale) : 
 	w,h = I.size
