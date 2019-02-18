@@ -85,6 +85,8 @@ parser.add_argument(
 parser.add_argument(
 	'--architecture', type=str, default = 'resnet18', choices = ['resnet18', 'resnet34'], help='which architecture, resnet18 or resnet34, by default is resnet18')
 
+parser.add_argument(
+	'--labelJson', type=str, default = '../data/Oxford5K/OxfordTestBB.json', help='label json oxford')
 
 args = parser.parse_args()
 tqdm.monitor_interval = 0
@@ -99,6 +101,8 @@ iterEpoch = args.nbImgEpoch / args.batchSize
 msg = '\n\nAlgo Description : \n\n In each Epoch, \n\t1. {:d} {:d}X{:d} features are utilized to search candidate regions; \n\t2. we validate on the outermost part in {:d}X{:d} region; \n\t3. We train on 4 corners in the {:d}X{:d} region for the top {:d} pairs; \n\t4. Batch size is {:d}, thus each epoch we do {:d} update. \n\n'.format(nbPatchTotal, args.searchRegion, args.searchRegion, args.validRegion, args.validRegion, args.trainRegion, args.trainRegion, args.nbImgEpoch, args.batchSize, iterEpoch)
 print msg
 
+with open(args.labelJson, 'r') as f :
+	label = ujson.load(f)
 
 ## ImageNet Pre-processing
 transform = transforms.Compose([
@@ -146,7 +150,7 @@ for i_ in range(args.nbEpoch) :
 		index = np.random.permutation(np.arange(len(imgList)))[:args.nbSearchImgEpoch]
 		searchImgList = [imgList[i] for i in index]
 
-	featQuery = outils.RandomQueryFeatWithBbox(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, minNet, strideNet, transform, net, args.searchDir, args.margin, searchImgList, args.cuda, args.queryScale)
+	featQuery = outils.RandomQueryFeatWithBbox(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, minNet, strideNet, transform, net, args.searchDir, args.margin, label, args.cuda, args.queryScale)
 
 	print '---> Get top10 patches matching to query...'
 	topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, searchImgList, args.searchDir, args.margin, args.searchRegion, scales, minNet, strideNet, transform, net, featQuery, args.cuda)

@@ -78,12 +78,27 @@ def RandomQueryFeat(nbPatchTotal, featChannel, searchRegion, imgFeatMin, minNet,
 		count += 1
 
 	return Variable(featQuery)
+
+def ResizeImgRef(featMax, featMin, minNet, strideNet, w, h) :
+
+	ratio = float(w)/h
+	if ratio < 1 : 
+		featH = featMax 
+		featW = max(round(ratio * featH), featMin )
+		
+	else : 
+		featW = featMax 
+		featH = max(round(featW/ratio), featMin )
+	resizeW = (featW - 1) * strideNet + minNet
+	resizeH = (featH - 1) * strideNet + minNet
+
+	return int(resizeW), int(resizeH), float(resizeW)/w, float(resizeH)/h
 	
 def FeatImgRefBbox(I, scaleImgRef, minNet, strideNet, margin, transform, model, featChannel, bb) : 
 
 	# Resize image
 	pilImgW, pilImgH = I.size
-	resizeW, resizeH, wRatio, hRatio =  ResizeImg(scaleImgRef, 2 * margin + 1, minNet, strideNet, bb[2] - bb[0], bb[3] - bb[1])
+	resizeW, resizeH, wRatio, hRatio =  ResizeImgRef(scaleImgRef, 2 * margin + 1, minNet, strideNet, bb[2] - bb[0], bb[3] - bb[1])
 	bb0, bb1, bb2, bb3 = bb[0] * wRatio, bb[1] * hRatio, bb[2] * wRatio, bb[3] * hRatio
 	pilImg = I.resize((int(pilImgW * wRatio), int(pilImgH * hRatio)))
 	
@@ -106,7 +121,7 @@ def FeatImgRefBbox(I, scaleImgRef, minNet, strideNet, margin, transform, model, 
 	
 	return feat
 	
-def RandomQueryFeatWithBbox(nbPatchTotal, featChannel, searchRegion, imgFeatMin, minNet, strideNet, transform, net, searchDir, margin, label, useGpu, queryScale) :
+def RandomQueryFeatWithBbox(nbPatchTotal, featChannel, searchRegion, imgFeatMin, minNet, strideNet, transform, model, searchDir, margin, label, useGpu, queryScale) :
 
 	featQuery = torch.cuda.FloatTensor(nbPatchTotal, featChannel, searchRegion, searchRegion) # Store feature
 	img_sampler = InfiniteSampler(label['test'])
@@ -121,7 +136,7 @@ def RandomQueryFeatWithBbox(nbPatchTotal, featChannel, searchRegion, imgFeatMin,
 		w,h = I.size
 		scale = np.random.choice(queryScale) ## Predefine some scales
 		bb = label['annotation'][img_name]['bbox']
-		I_data = FeatImgRefBbox(I, scale, minNet, strideNet, margin, transform, model, featChannel, False, bb)
+		I_data = FeatImgRefBbox(I, scale, minNet, strideNet, margin, transform, model, featChannel, bb)
 
 		## Query feature + Query Information
 		feat_w, feat_h = I_data.shape[2], I_data.shape[3]
