@@ -78,6 +78,61 @@ def RandomQueryFeat(nbPatchTotal, featChannel, searchRegion, imgFeatMin, minNet,
 		count += 1
 
 	return Variable(featQuery)
+	
+def FeatImgRefBbox(I, scaleImgRef, minNet, strideNet, margin, transform, model, featChannel, bb) : 
+
+	# Resize image
+	pilImgW, pilImgH = I.size
+	resizeW, resizeH, wRatio, hRatio =  ResizeImg(scaleImgRef, 2 * margin + 1, minNet, strideNet, bb[2] - bb[0], bb[3] - bb[1])
+	bb0, bb1, bb2, bb3 = bb[0] * wRatio, bb[1] * hRatio, bb[2] * wRatio, bb[3] * hRatio
+	pilImg = I.resize((int(pilImgW * wRatio), int(pilImgH * hRatio)))
+	
+	wLeftMargin = min(int(bb0) / strideNet, margin)
+	hTopMargin = min(int(bb1) / strideNet, margin)
+	wRightMargin = min(int(pilImg.size[0] - bb2) / strideNet, margin)
+	hBottomMargin = min(int(pilImg.size[1] - bb3) / strideNet, margin)
+	pilImg = pilImg.crop( (bb0 - wLeftMargin * strideNet, bb1 - hTopMargin * strideNet, bb2 + wRightMargin * strideNet, bb3 + hBottomMargin * strideNet) )
+	
+			
+	## Image feature
+	feat=transform(pilImg)
+	feat=feat.unsqueeze(0)
+	feat = Variable(feat, volatile=True).cuda() 
+	feat = model.forward(feat).data
+	feat = feat / (1e-7 + (torch.sum(feat **2, dim = 1, keepdim=True).expand(feat.size())**0.5) )
+	feat = feat[:, :, hTopMargin : feat.size()[2] - hBottomMargin, wLeftMargin : feat.size()[3] - wRightMargin ].contiguous()
+	featW, featH = feat.size()[2], feat.size()[3] ## attention : featW and featH correspond to pilImgH and pilImgW respectively 
+	
+	
+	return feat
+	
+def RandomQueryFeatWithBbox(nbPatchTotal, featChannel, searchRegion, imgFeatMin, minNet, strideNet, transform, net, searchDir, margin, label, useGpu, queryScale) :
+
+	featQuery = torch.cuda.FloatTensor(nbPatchTotal, featChannel, searchRegion, searchRegion) # Store feature
+	img_sampler = InfiniteSampler(label['test'])
+	count = 0
+
+	for (i, img_name) in tqdm(img_sampler.loop()) :
+		if count == nbPatchTotal :
+			break
+
+		## resize image
+		I = Image.open(os.path.join(searchDir, img_name)).convert('RGB')
+		w,h = I.size
+		scale = np.random.choice(queryScale) ## Predefine some scales
+		bb = label['annotation'][img_name]['bbox']
+		I_data = FeatImgRefBbox(I, scale, minNet, strideNet, margin, transform, model, featChannel, False, bb)
+
+		## Query feature + Query Information
+		feat_w, feat_h = I_data.shape[2], I_data.shape[3]
+		feat_w_pos = np.random.choice(np.arange(0, feat_w - searchRegion, 1), 1)[0]
+		feat_h_pos = np.random.choice( np.arange(0, feat_h - searchRegion, 1), 1)[0]
+		featQuery[count] = I_data[:, :, feat_w_pos : feat_w_pos + searchRegion, feat_h_pos : feat_h_pos + searchRegion].clone()
+
+		count += 1
+
+	return Variable(featQuery)
+	
 
 ## Cosine similarity Implemented as a Convolutional Layer
 ## Note: we don't normalize kernel

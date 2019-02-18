@@ -146,7 +146,7 @@ for i_ in range(args.nbEpoch) :
 		index = np.random.permutation(np.arange(len(imgList)))[:args.nbSearchImgEpoch]
 		searchImgList = [imgList[i] for i in index]
 
-	featQuery = outils.RandomQueryFeat(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, minNet, strideNet, transform, net, args.searchDir, args.margin, searchImgList, args.cuda, args.queryScale)
+	featQuery = outils.RandomQueryFeatWithBbox(nbPatchTotal, featChannel, args.searchRegion, imgFeatMin, minNet, strideNet, transform, net, args.searchDir, args.margin, searchImgList, args.cuda, args.queryScale)
 
 	print '---> Get top10 patches matching to query...'
 	topkImg, topkScale, topkValue, topkW, topkH = outils.RetrievalRes(nbPatchTotal, searchImgList, args.searchDir, args.margin, args.searchRegion, scales, minNet, strideNet, transform, net, featQuery, args.cuda)

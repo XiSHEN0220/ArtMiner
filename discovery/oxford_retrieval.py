@@ -223,6 +223,9 @@ if __name__ == '__main__':
 	parser.add_argument(
 		'--outResJson', type=str, default = 'oxfordBboxResNet.json', help='output json file to store the results')
 
+	parser.add_argument(
+		'--architecture', type=str, default = 'resnet18', choices = ['resnet18', 'resnet34'], help='which architecture, resnet18 or resnet34, by default is resnet18')
+
 	
 
 
@@ -230,7 +233,7 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 	print args
 	
-	net = Model(args.finetunePath)
+	net = Model(args.finetunePath, args.architecture)
 	net.cuda() ## Not support cpu version
 	net.eval()
 
