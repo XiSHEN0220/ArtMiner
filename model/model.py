@@ -47,12 +47,12 @@ class BasicBlock(nn.Module):
 		return out
 
 
-class ResNet_layer3_feature(nn.Module):
+class ResNet18Conv4(nn.Module):
 
 	def __init__(self, init_weight_path):
 		
 		self.inplanes = 64
-		super(ResNet_layer3_feature, self).__init__()
+		super(ResNet18Conv4, self).__init__()
 		self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
 							   bias=False)
 		self.bn1 = nn.BatchNorm2d(64, eps=1e-05)
@@ -107,13 +107,76 @@ class ResNet_layer3_feature(nn.Module):
 		x = self.layer3(x)
 		
 		return x
+
+
+class ResNet34Conv4(nn.Module):
+
+	def __init__(self, init_weight_path):
 		
+		self.inplanes = 64
+		super(ResNet34Conv4, self).__init__()
+		self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
+							   bias=False)
+		self.bn1 = nn.BatchNorm2d(64, eps=1e-05)
+		self.relu = nn.ReLU(inplace=True)
+		self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+		self.layer1 = self._make_layer(BasicBlock, 64, 3)
+		self.layer2 = self._make_layer(BasicBlock, 128, 4, stride=2)
+		self.layer3 = self._make_layer(BasicBlock, 256, 6, stride=2)
+		if init_weight_path : 
+			self.init_weight(init_weight_path)
+			
+		
+		
+	def _make_layer(self, block, planes, blocks, stride=1):
+		downsample = None
+		if stride != 1 or self.inplanes != planes * block.expansion:
+			downsample = nn.Sequential(
+				nn.Conv2d(self.inplanes, planes * block.expansion,
+						  kernel_size=1, stride=stride, bias=False),
+				nn.BatchNorm2d(planes * block.expansion, eps=1e-05),
+			)
+
+		layers = []
+		layers.append(block(self.inplanes, planes, stride, downsample))
+		self.inplanes = planes * block.expansion
+		for i in range(1, blocks):
+			layers.append(block(self.inplanes, planes, 1, None))
+
+		return nn.Sequential(*layers)
+		
+	def init_weight(self, init_weight_path) :
+		model_params=torch.load(init_weight_path)
+		for key in model_params.keys() : 
+			if 'layer4' in key or 'fc.bias' in key or 'fc.weight' in key : 
+				model_params.pop(key, None)
+			if 'model.' in key : 
+				keyUpdate = key.split('model.')[1]
+				model_params[keyUpdate] = model_params[key]
+				model_params.pop(key, None)
+		
+		self.load_state_dict(model_params)
+		
+				
+	def forward(self, x):
+		x = self.conv1(x)
+		x = self.bn1(x)
+		x = self.relu(x)
+		x = self.maxpool(x)
+
+		x = self.layer1(x)
+		x = self.layer2(x)
+		x = self.layer3(x)
+		
+		return x
+
+
 class Model(nn.Module):
 
-	def __init__(self, resume_model_path = None):
+	def __init__(self, resume_model_path = None, architecture = 'resnet18'):
 		
 		super(Model, self).__init__()
-		self.model = ResNet_layer3_feature( resume_model_path )  
+		self.model = ResNet18Conv4( resume_model_path ) if architecture == 'resnet18' else ResNet34Conv4( resume_model_path )
 		if resume_model_path :
 			print 'Loading weight from {}'.format(resume_model_path) 
 				

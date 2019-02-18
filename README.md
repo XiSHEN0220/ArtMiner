@@ -1,5 +1,8 @@
 # ArtMiner
 Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning"
+<p align="center">
+<img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/teaser.png" width="400px" alt="teaser">
+</p>
 
 ## Table of Content
 * [Installation](#installation)
@@ -132,6 +135,12 @@ To get classification results on Ltll :
 cd discovery
 bash demo_ltll.sh
 ```
+You should obtain the results in the table 2 in the paper, note that there is RANSAC in the algorithm, but we find very small variation by setting number of iterations to 1000 : 
+
+| Feature | Disovery |
+| :------: | :------: |
+| ImageNet | 80.9 |
+| Ours (trained on LTLL) | 88.5 |
 
 To get retrieval results on Oxford5K : 
 ``` Bash

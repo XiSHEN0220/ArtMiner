@@ -81,6 +81,10 @@ parser.add_argument(
 
 parser.add_argument(
 	'--queryScale', type=int, nargs='+', default = [68, 60, 49, 40, 36], help='query image scale')
+	
+parser.add_argument(
+	'--architecture', type=str, default = 'resnet18', choices = ['resnet18', 'resnet34'], help='which architecture, resnet18 or resnet34, by default is resnet18')
+
 
 args = parser.parse_args()
 tqdm.monitor_interval = 0
@@ -108,7 +112,7 @@ transform = transforms.Compose([
 strideNet = 16
 minNet = 15
 featChannel = 256
-net = Model(args.finetunePath)
+net = Model(args.finetunePath, args.architecture)
 if args.cuda:
 	net.cuda()
 optimizer = torch.optim.Adam(net.parameters(), lr=args.lr, betas=(0.5, 0.999))

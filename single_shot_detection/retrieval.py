@@ -83,6 +83,9 @@ parser.add_argument(
 parser.add_argument(
 	'--detMAP', type=str , default = None, help='write detection results (query mAP) into json file?')
 
+parser.add_argument(
+	'--architecture', type=str, default = 'resnet18', choices = ['resnet18', 'resnet34'], help='which architecture, resnet18 or resnet34, by default is resnet18')
+
 
 
 args = parser.parse_args()
@@ -206,7 +209,7 @@ transform = transforms.Compose([
 strideNet = 16
 minNet = 15
 featChannel = 256
-net = Model(args.finetunePath)
+net = Model(args.finetunePath, args.architecture)
 if args.cuda:
 	net.cuda()
 

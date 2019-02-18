@@ -72,10 +72,13 @@ parser.add_argument(
 parser.add_argument(
 	'--dataset', type=str, default = 'ltll', choices = ['ltll', 'oxford'], help='which dataset, choices between ltll and oxford, by default is ltll')
 
+parser.add_argument(
+	'--architecture', type=str, default = 'resnet18', choices = ['resnet18', 'resnet34'], help='which architecture, resnet18 or resnet34, by default is ltll')
+
 args = parser.parse_args()
 print args
 	
-net = Model(args.finetunePath)
+net = Model(args.finetunePath, args.architecture)
 net.cuda() ## Not support cpu version
 net.eval()
 

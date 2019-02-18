@@ -244,7 +244,7 @@ def ScoreRANSAC(match1, match2, matchSetT, sampleIndex, score, tolerance, nbSamp
 	X = match1[sampleIndex]
 	Y = match2[sampleIndex]
 	H21 = paramEstimate(X, Y)
-	 
+	
 	error = Prediction(match1, match2, H21)
 	
 	isInlier = error < tolerance
