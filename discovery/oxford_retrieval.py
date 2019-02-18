@@ -265,8 +265,8 @@ if __name__ == '__main__':
 			res[sourceImgName].append((targetImgName, score))
 		#res[sourceImgName] = sorted(res[sourceImgName], key=lambda s: s[1], reverse=True)
 		#print sourceImgName, res[sourceImgName][0]
-	with open(args.outResJson, 'w') as f : 
-		ujson.dump(res, f)
+		with open(args.outResJson, 'w') as f : 
+			ujson.dump(res, f)
 
 	mAPres = []
 	for sourceImgName in res.keys() : 
