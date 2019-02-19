@@ -184,10 +184,6 @@ if __name__ == '__main__':
 		'--nbOctave', type=int, default= 2, help='# of octaves')
 
 	##---- Model Setting ----####
-
-	parser.add_argument(
-		'--imagenetFeatPath', type=str, default='../model/resnet18.pth', help='imageNet feature net weight path')
-
 	parser.add_argument(
 		'--finetunePath', type=str, help='finetune net weight path')
 
@@ -222,7 +218,7 @@ if __name__ == '__main__':
 		'--nbSamplePoint', type=int, default = 3 , help='nb sample point = 2 ==> Hough, nb sample point = 3 ==> Affine, nb sample point = 4 ==> Homography')
 	
 	parser.add_argument(
-		'--nbIter', type=int, default = 100 , help='nb iteration, nbIter = 1 ==> Hough transformation, parameter estimated with all points in the matchSet')
+		'--nbIter', type=int, default = 1000 , help='nb iteration, nbIter = 1 ==> Hough transformation, parameter estimated with all points in the matchSet')
 	
 	parser.add_argument(
 		'--saveQuality', type=int, default = 1000, help='output image quality')
@@ -231,7 +227,11 @@ if __name__ == '__main__':
 		'--computeSaliencyCoef', action='store_true', help='using saliency coefficient for the feature of reference image?')
 	
 	parser.add_argument(
-		'--minFeatCC', type=int, default = 4, help='minimum number of features in CC')
+		'--minFeatCC', type=int, default = 3, help='minimum number of features in CC')
+	
+	parser.add_argument(
+		'--architecture', type=str, default = 'resnet18', choices = ['resnet18', 'resnet34'], help='which architecture, resnet18 or resnet34, by default is resnet18')
+
 	
 	
 	
@@ -241,7 +241,7 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 	print args
 	
-	net = Model(args.imagenetFeatPath, args.finetunePath)
+	net = Model(args.finetunePath, args.architecture)
 
 	if args.cuda:
 		net.cuda()
