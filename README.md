@@ -2,6 +2,7 @@
 Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning"
 
 Arxiv preprint: [TODO](TODO)
+
 Project Webpage : [https://imagine.enpc.fr/~shenx/ArtMiner/artMiner.html](https://imagine.enpc.fr/~shenx/ArtMiner/artMiner.html)
 
 <p align="center">
