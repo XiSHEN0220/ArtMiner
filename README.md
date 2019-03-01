@@ -1,9 +1,22 @@
 # ArtMiner
 Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning"
+
+Arxiv preprint: [TODO](TODO)
+Project Webpage : [https://imagine.enpc.fr/~shenx/ArtMiner/artMiner.html](https://imagine.enpc.fr/~shenx/ArtMiner/artMiner.html)
+
 <p align="center">
 <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/teaser.png" width="400px" alt="teaser">
 </p>
 
+If our project is helpful for your research, please consider citing : 
+``` Bash
+@inproceedings{TODO,
+          title={{Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning}},
+          author={Xi, Shen and Alexei, A., Efros and Aubry, Mathieu},
+          booktitle={Proceedings IEEE Conf. on Computer Vision and Pattern Recognition (CVPR)},
+          year={2019}
+        }
+```
 ## Table of Content
 * [Installation](#installation)
 * [Single Shot Detection](#single-shot-detection)
@@ -142,9 +155,15 @@ You should obtain the results in the table 2 in the paper, note that there is RA
 | ImageNet | 80.9 |
 | Ours (trained on LTLL) | 88.5 |
 
+### Oxford
 To get retrieval results on Oxford5K : 
 ``` Bash
 cd discovery
 bash demo_oxford.sh
 ```
+You should obtain the results in the table 2 in the paper : 
 
+| Feature | Disovery |
+| :------: | :------: |
+| ImageNet | 85.0 |
+| Ours (trained on Oxford) | 85.9 |
