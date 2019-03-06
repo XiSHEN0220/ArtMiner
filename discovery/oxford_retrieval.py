@@ -254,7 +254,7 @@ if __name__ == '__main__':
 		label = ujson.load(f)
 	
 	res = {}
-	for sourceImgName in tqdm(label[args.valOrTest][30:]) :
+	for sourceImgName in tqdm(label[args.valOrTest]) :
 		sourceImgPath = os.path.join(args.searchDir, sourceImgName)
 		res[sourceImgName] = []
 		I = Image.open(sourceImgPath).convert('RGB')
