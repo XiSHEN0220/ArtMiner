@@ -53,7 +53,7 @@ cd data
 bash download_dataset.sh
 ```
 
-To download pretrained model (Brueghel + Ltll + Oxford) :
+To download pretrained models (ResNet18 + Brueghel + Ltll + Oxford) :
 ``` Bash
 cd model
 bash download_models.sh
@@ -69,7 +69,7 @@ bash run_FeatImageNet.sh # ImageNet feature
 bash run_FeatBrueghel.sh # Brueghel feature
 ```
 
-You should obtain the results in the table 1,
+You should obtain the results in the table 1 in the paper,
 
 | Feature | Cosine Similarity |
 | :------: | :------: |
@@ -89,12 +89,14 @@ The visual results will be saved into the visualDir that you indicate, some exam
 ### Visualize Training Data
 It is highly recommended to visualize the training data before the training.
 
-One example is can be ran with : 
+One command example is : 
 ``` Bash
 cd feature_learning/visualzation/
 bash visBrueghelLtllOxford.sh
 ```
-The examples saved into the output directory are shown below. <b>Red</b> / <b>Blue</b> / <b>Green</b> region indicates <b>Search</b> / <b>Validate</b> / <b>Train</b> region.
+The training patches will be saved into the output directory, some samples are shown below. 
+
+<b>Red</b> / <b>Blue</b> / <b>Green</b> regions indicate <b>Proposal Regions</b> / <b>Verification Regions</b> / <b>Positive Regions</b>.
 
 |![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_1.jpg) | ![](https://github.com/XiSHEN0220/ArtMiner/blob/master/img/Brueghel_Rank1_2.jpg)|
 |:---:|:---:|
@@ -109,9 +111,9 @@ The examples saved into the output directory are shown below. <b>Red</b> / <b>Bl
 To train on Brueghel / Ltll / Oxford dataset :
 ``` Bash
 cd feature_learning/
-bash brughel.sh 
-bash ltll.sh
-bash oxford.sh
+bash brughel.sh # training on Brueghel
+bash ltll.sh # training on LTLL
+bash oxford.sh # training on Oxford
 ```
 
 To train on your own dataset, please refer to:
@@ -127,7 +129,7 @@ python train.py --help
 ### Pair Discovery
 
 To launch discovery between a pair of images, please utilize the script in *discovery/pair_discovery.py*.
-One example of command is in *discovery/pair_discovery.sh* :
+One example command is in *discovery/pair_discovery.sh* :
 ``` Bash
 cd discovery
 bash pair_discovery.sh
