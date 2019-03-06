@@ -1,4 +1,4 @@
-pip install torchvision
+pip install torchvision==0.2.0
 pip install ujson
 pip install tqdm
 pip install opencv-python
