@@ -7,5 +7,5 @@ mv resnet18-5c106cde.pth resnet18.pth
 wget 'https://download.pytorch.org/models/resnet34-333f7ec4.pth'
 mv resnet34-333f7ec4.pth resnet34.pth
 wget 'https://www.dropbox.com/s/dxi5hchfawl98qa/oxfordModel.pth?dl=0'
-mv oxfordModel.pth?dl= oxfordModel.pth
+mv oxfordModel.pth?dl=0 oxfordModel.pth
 
