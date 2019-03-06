@@ -10,7 +10,6 @@ sys.path.append("..")
 
 
 from model.model import Model
-import matplotlib.pyplot as plt
 from torchvision import datasets, transforms,models
 import ujson 
 
