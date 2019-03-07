@@ -1,9 +1,9 @@
 # ArtMiner
 Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning"
 
-PDF: [http://imagine.enpc.fr/~shenx/ArtMiner/artMiner2019CVPR.pdf](http://imagine.enpc.fr/~shenx/ArtMiner/artMiner2019CVPR.pdf)
+[PDF](http://imagine.enpc.fr/~shenx/ArtMiner/artMiner2019CVPR.pdf) [WebPage](https://imagine.enpc.fr/~shenx/ArtMiner)
 
-Project Webpage : [https://imagine.enpc.fr/~shenx/ArtMiner](https://imagine.enpc.fr/~shenx/ArtMiner)
+
 
 <p align="center">
 <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/teaser.png" width="400px" alt="teaser">
@@ -47,13 +47,13 @@ bash requirement.sh
 
 ### Dataset and Model
 
-To download datasets (Brueghel + Ltll) :
+To download datasets (Brueghel + Ltll + Oxford) :
 ``` Bash
 cd data
 bash download_dataset.sh
 ```
 
-To download pretrained model :
+To download pretrained model (Brueghel + Ltll + Oxford) :
 ``` Bash
 cd model
 bash download_models.sh
@@ -114,8 +114,7 @@ bash ltll.sh
 bash oxford.sh
 ```
 
-If you want to launch the training on your own dataset, indicates the image directory in *--searchDir* in *train.py*.
-For more details, please refer to:
+To train on your own dataset, please refer to:
 ``` Bash
 cd feature_learning/
 python train.py --help
@@ -167,4 +166,4 @@ You should obtain the results in the table 2 in the paper :
 | Feature | Disovery |
 | :------: | :------: |
 | ImageNet | 85.0 |
-| Ours (trained on Oxford) | 85.9 |
+| Ours (trained on Oxford) | 85.7 |
