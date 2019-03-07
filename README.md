@@ -1,9 +1,9 @@
 # ArtMiner
 Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning"
 
-Arxiv preprint: [TODO](TODO)
+PDF: [http://imagine.enpc.fr/~shenx/ArtMiner/artMiner2019CVPR.pdf](http://imagine.enpc.fr/~shenx/ArtMiner/artMiner2019CVPR.pdf)
 
-Project Webpage : [https://imagine.enpc.fr/~shenx/ArtMiner/artMiner.html](https://imagine.enpc.fr/~shenx/ArtMiner/artMiner.html)
+Project Webpage : [https://imagine.enpc.fr/~shenx/ArtMiner](https://imagine.enpc.fr/~shenx/ArtMiner)
 
 <p align="center">
 <img src="https://github.com/XiSHEN0220/ArtMiner/blob/master/img/teaser.png" width="400px" alt="teaser">
@@ -11,7 +11,7 @@ Project Webpage : [https://imagine.enpc.fr/~shenx/ArtMiner/artMiner.html](https:
 
 If our project is helpful for your research, please consider citing : 
 ``` Bash
-@inproceedings{TODO,
+@inproceedings{shen2019discovery,
           title={{Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning}},
           author={Xi, Shen and Alexei, A., Efros and Aubry, Mathieu},
           booktitle={Proceedings IEEE Conf. on Computer Vision and Pattern Recognition (CVPR)},
