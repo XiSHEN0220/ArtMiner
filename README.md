@@ -1,7 +1,7 @@
 # ArtMiner
 Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning"
 
-[[PDF]](http://imagine.enpc.fr/~shenx/ArtMiner/artMiner2019CVPR.pdf) [[Project webpage]](https://imagine.enpc.fr/~shenx/ArtMiner)
+[[PDF]](http://imagine.enpc.fr/~shenx/ArtMiner/artMiner2019CVPR.pdf) [[Project webpage]](http://imagine.enpc.fr/~shenx/ArtMiner/)
 
 
 
