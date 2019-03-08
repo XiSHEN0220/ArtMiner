@@ -13,7 +13,7 @@ If our project is helpful for your research, please consider citing :
 ``` Bash
 @inproceedings{shen2019discovery,
           title={{Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning}},
-          author={Xi, Shen and Alexei, A., Efros and Aubry, Mathieu},
+          author={Shen, Xi and Alexei, A., Efros and Aubry, Mathieu},
           booktitle={Proceedings IEEE Conf. on Computer Vision and Pattern Recognition (CVPR)},
           year={2019}
         }
