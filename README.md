@@ -12,7 +12,7 @@ Pytorch implementation of Paper "Discovering Visual Patterns in Art Collections 
 If our project is helpful for your research, please consider citing : 
 ``` Bash
 @inproceedings{shen2019discovery,
-          title={{Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning}},
+          title={Discovering Visual Patterns in Art Collections with Spatially-consistent Feature Learning},
           author={Shen, Xi and Efros, Alexei A and Aubry, Mathieu},
           booktitle={Proceedings IEEE Conf. on Computer Vision and Pattern Recognition (CVPR)},
           year={2019}
