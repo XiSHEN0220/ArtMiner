@@ -1,0 +1,1 @@
+python pair_discovery_json.py --cuda --nbIter 1000 --computeSaliencyCoef --jsonPairFile pairLTLL_118828.json --indexBegin 0 --indexEnd 118828 --outJson pairLTLLSCORE0_118828.json --finetunePath ../model/ltllModel.pth  --houghInitial

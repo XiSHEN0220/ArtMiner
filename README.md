@@ -23,6 +23,8 @@ If our project is helpful for your research, please consider citing :
 * [Single Shot Detection](#single-shot-detection)
 * [Feature Learning](#feature-learning)
 * [Discovery](#discovery)
+* [Clusters in Dataset](#clusters-in-dataset)
+
 
 ## Installation
 
@@ -169,3 +171,30 @@ You should obtain the results in the table 2 in the paper :
 | :------: | :------: |
 | ImageNet | 85.0 |
 | Ours (trained on Oxford) | 85.7 |
+
+
+## Clusters in Dataset
+
+To get clusters of images in datasets, we propose the following pipeline (taking LTLL as example): 
+
+* Discovery scores for all pairs in the dataset 
+
+``` Bash
+cd discovery
+bash LTLLPairScore.sh
+```
+
+* Thresholding the pairs and compute connected component in the graph  
+
+``` Bash
+cd discovery
+bash LTLLCluster.sh
+```
+
+The clusters on LTLL can be seen in [here](http://imagine.enpc.fr/~shenx/ArtMiner/visualRes/LTLL/LTLL.html)
+
+
+
+
+ 
+ 

@@ -1,0 +1,1 @@
+python discovery_cluster.py --cuda --nbIter 1000 --computeSaliencyCoef --jsonPairScoreFile pairLTLLSCORE0_118828.json --indexBegin 0 --indexEnd 118828  --finetunePath ../model/ltllModel.pth  --houghInitial --scoreThreshold 0.03 --outDir LTLLCluster
