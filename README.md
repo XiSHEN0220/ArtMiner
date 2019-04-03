@@ -191,7 +191,7 @@ cd discovery
 bash LTLLCluster.sh
 ```
 
-The clusters on LTLL can be seen in [here](http://imagine.enpc.fr/~shenx/ArtMiner/visualRes/LTLL/LTLL.html)
+The clusters of LTLL can be seen [here](http://imagine.enpc.fr/~shenx/ArtMiner/visualRes/LTLL/LTLL.html)
 
 
 
