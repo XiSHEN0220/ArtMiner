@@ -280,15 +280,23 @@ def RANSAC(nbIter, match1, match2, matchSetT, score, tolerance, nbSamplePoint) :
 		transformation = 'Homography'
 	
 	nbMatch = len(matchSetT)
-	nbCombination = int(np.prod([nbMatch - i for i in range(nbSamplePoint)]) / np.prod([i + 1 for i in range(nbSamplePoint)]))	
-	sampleIndexList = np.array(list(combinations(range(nbMatch),nbSamplePoint)))[np.random.choice(np.arange(nbCombination), min(nbCombination, nbIter), replace=False)]
+	if nbMatch < 50 : 
+		nbCombination = int(np.prod([nbMatch - i for i in range(nbSamplePoint)]) / np.prod([i + 1 for i in range(nbSamplePoint)]))
+		sampleIndexList = np.array(list(combinations(range(nbMatch),nbSamplePoint)))[np.random.choice(np.arange(nbCombination), min(nbCombination, nbIter), replace=False)]
+		for i in range(len(sampleIndexList)) : 
+			H21, pairScore, matchSetT = ScoreRANSAC(match1, match2, matchSetT, sampleIndexList[i], score, tolerance, nbSamplePoint, paramEstimate)
+			if pairScore > bestScore : 
+				bestParams = H21
+				bestScore = pairScore
 	
-
-	for i in range(len(sampleIndexList)) : 
-		H21, pairScore, matchSetT = ScoreRANSAC(match1, match2, matchSetT, sampleIndexList[i], score, tolerance, nbSamplePoint, paramEstimate)
-		if pairScore > bestScore : 
-			bestParams = H21
-			bestScore = pairScore
+	else : 
+		listIndex = range(nbMatch)
+		for i in range(nbIter) : 
+			H21, pairScore, matchSetT = ScoreRANSAC(match1, match2, matchSetT, np.random.choice(listIndex, nbSamplePoint, replace=False), score, tolerance, nbSamplePoint, paramEstimate)
+			if pairScore > bestScore : 
+				bestParams = H21
+				bestScore = pairScore
+				
 	if len(bestParams) == 0 : 
 		return [], 0, 0
 		
