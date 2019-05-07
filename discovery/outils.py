@@ -280,6 +280,8 @@ def RANSAC(nbIter, match1, match2, matchSetT, score, tolerance, nbSamplePoint) :
 		transformation = 'Homography'
 	
 	nbMatch = len(matchSetT)
+	if nbMatch < 4 : 
+		return [], 0, 0
 	if nbMatch < 50 : 
 		nbCombination = int(np.prod([nbMatch - i for i in range(nbSamplePoint)]) / np.prod([i + 1 for i in range(nbSamplePoint)]))
 		sampleIndexList = np.array(list(combinations(range(nbMatch),nbSamplePoint)))[np.random.choice(np.arange(nbCombination), min(nbCombination, nbIter), replace=False)]
