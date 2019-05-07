@@ -69,11 +69,17 @@ def PairDiscovery(img1Path, img2Path, model, transform, tolerance, minFeatCC, ma
 	
 	
 	vote = outils.VoteMatrix(tolerance)
+	try : 
+		I1 = Image.open(img1Path).convert('RGB')
+	except : 
+		return 0.
 	
-	I1 = Image.open(img1Path).convert('RGB')
 	feat1, pilImg1W, pilImg1H, feat1W, feat1H, list1W, list1H, img1Bbox  = outils.FeatImgRef(I1, scaleImgRef, minNet, strideNet, margin, transform, model, featChannel, computeSaliencyCoef)
 	toleranceRef = tolerance / scaleImgRef
-	I2 = Image.open(img2Path).convert('RGB')
+	try : 
+		I2 = Image.open(img2Path).convert('RGB')
+	except : 
+		return 0.
 	pilImg2W, pilImg2H = I2.size
 	
 	match1, match2, similarity, matchSetT = outils.MatchPair(minNet, strideNet, model, transform, scaleList, feat1, feat1W, feat1H, I2, list1W, list1H, featChannel, tolerance, vote)
@@ -88,7 +94,7 @@ def PairDiscovery(img1Path, img2Path, model, transform, tolerance, minFeatCC, ma
 	
 	if len(bestParams) == 0 :
 		if out1 :
-			SkipIteration(I1, I2, saveQuality, index)
+			SkipIteration(I1, I2, saveQuality, out1, out2)
 		return 0.
 	
 	feat2W, feat2H = outils.FeatSizeImgTarget(bestParams, feat1W, feat1H)
@@ -131,10 +137,6 @@ def PairDiscovery(img1Path, img2Path, model, transform, tolerance, minFeatCC, ma
 	
 		finalMask1[mask1 ] = 255
 		finalMask2[mask2 ] = 255
-	
-		 
-	
-
 	
 		I1RGBA = cv2.cvtColor(np.array(I1), cv2.COLOR_RGBA2BGRA)
 		I2RGBA = cv2.cvtColor(np.array(I2), cv2.COLOR_RGBA2BGRA)
