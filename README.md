@@ -49,9 +49,9 @@ bash requirement.sh
 
 ### Dataset and Model
 
-We release the Brueghel dataset containing (1,587 artworks) and our annotations (10 visual details, 273 instances with bounding box annotations).
+We release the Brueghel dataset containing 1,587 artworks and our annotations (10 visual details, 273 instances with bounding box annotations).
  
-One can directly download with the following command: 
+One can directly download it with the following command: 
 ``` Bash
 cd data
 bash download_dataset.sh (Brueghel + Ltll + Oxford) 
