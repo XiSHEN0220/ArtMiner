@@ -49,11 +49,17 @@ bash requirement.sh
 
 ### Dataset and Model
 
-To download datasets (Brueghel + Ltll + Oxford) :
+We release the Brueghel dataset containing (1,587 artworks) and our annotations (10 visual details, 273 instances with bounding box annotations).
+ 
+One can directly download with the following command: 
 ``` Bash
 cd data
-bash download_dataset.sh
+bash download_dataset.sh (Brueghel + Ltll + Oxford) 
 ```
+
+Or click [here (~400M)](http://imagine.enpc.fr/~shenx/data/Brueghel.zip) to download the dataset and our annotations.
+
+A full description is provided in our [project website](http://imagine.enpc.fr/~shenx/ArtMiner/).
 
 To download pretrained models (ResNet18 + Brueghel + Ltll + Oxford) :
 ``` Bash
